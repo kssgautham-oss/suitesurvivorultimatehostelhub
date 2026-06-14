@@ -1,13 +1,15 @@
 import { useMemo, useState } from "react";
 import { Plus, Trash2, Wallet } from "lucide-react";
+import { useRoom } from "@/lib/mock-store";
 
 type Expense = { id: string; label: string; amount: number; paidBy: string };
-const ROOMMATES = ["Aarav", "Rohan", "Vikram"];
 
 export default function SplitExpense() {
+  const room = useRoom();
+  const ROOMMATES = room?.roommates ?? ["A", "B", "C"];
   const [items, setItems] = useState<Expense[]>([
-    { id: "1", label: "Internet Bill", amount: 900, paidBy: "Aarav" },
-    { id: "2", label: "Maggi Stash", amount: 240, paidBy: "Rohan" },
+    { id: "1", label: "Internet Bill", amount: 900, paidBy: ROOMMATES[0] },
+    { id: "2", label: "Maggi Stash", amount: 240, paidBy: ROOMMATES[1] },
   ]);
   const [label, setLabel] = useState("");
   const [amount, setAmount] = useState("");
@@ -21,14 +23,14 @@ export default function SplitExpense() {
   };
 
   const balances = useMemo(() => {
-    const b: Record<string, number> = { Aarav: 0, Rohan: 0, Vikram: 0 };
+    const b: Record<string, number> = Object.fromEntries(ROOMMATES.map(r => [r, 0]));
     items.forEach(e => {
-      const share = e.amount / 3;
+      const share = e.amount / ROOMMATES.length;
       ROOMMATES.forEach(r => { b[r] -= share; });
-      b[e.paidBy] += e.amount;
+      if (b[e.paidBy] !== undefined) b[e.paidBy] += e.amount;
     });
     return b;
-  }, [items]);
+  }, [items, ROOMMATES]);
 
   const max = Math.max(1, ...Object.values(balances).map(Math.abs));
 
@@ -100,7 +102,7 @@ export default function SplitExpense() {
           <div key={e.id} className="glass rounded-2xl p-3 flex items-center justify-between">
             <div className="min-w-0">
               <p className="font-semibold truncate">{e.label}</p>
-              <p className="text-xs text-muted-foreground">Paid by {e.paidBy} · ₹{(e.amount/3).toFixed(0)} each</p>
+              <p className="text-xs text-muted-foreground">Paid by {e.paidBy} · ₹{(e.amount/ROOMMATES.length).toFixed(0)} each</p>
             </div>
             <div className="flex items-center gap-2 shrink-0">
               <span className="text-gradient font-bold">₹{e.amount}</span>
