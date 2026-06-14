@@ -102,7 +102,7 @@ export default function SplitExpense() {
           <div key={e.id} className="glass rounded-2xl p-3 flex items-center justify-between">
             <div className="min-w-0">
               <p className="font-semibold truncate">{e.label}</p>
-              <p className="text-xs text-muted-foreground">Paid by {e.paidBy} · ₹{(e.amount/3).toFixed(0)} each</p>
+              <p className="text-xs text-muted-foreground">Paid by {e.paidBy} · ₹{(e.amount/ROOMMATES.length).toFixed(0)} each</p>
             </div>
             <div className="flex items-center gap-2 shrink-0">
               <span className="text-gradient font-bold">₹{e.amount}</span>
