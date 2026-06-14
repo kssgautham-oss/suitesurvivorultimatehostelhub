@@ -1,7 +1,7 @@
 import { useMemo, useState } from "react";
 import { Share2, RotateCw, Flame } from "lucide-react";
+import { useRoom } from "@/lib/mock-store";
 
-const ROOMMATES = ["Aarav", "Rohan", "Vikram"];
 const QUESTIONS = [
   "Who is most likely to leave the AC running?",
   "Who has the most chaotic study schedule?",
@@ -12,10 +12,14 @@ const QUESTIONS = [
 ];
 
 export default function VibeCheck() {
+  const room = useRoom();
+  const ROOMMATES = room?.roommates ?? ["A", "B", "C"];
   const [qIndex, setQIndex] = useState(0);
-  const [votes, setVotes] = useState<Record<string, string | null>>({ Aarav: null, Rohan: null, Vikram: null });
+  const [votes, setVotes] = useState<Record<string, string | null>>(
+    Object.fromEntries(ROOMMATES.map(r => [r, null]))
+  );
 
-  const allVoted = Object.values(votes).every(Boolean);
+  const allVoted = ROOMMATES.every(r => votes[r]);
   const question = QUESTIONS[qIndex];
 
   const verdict = useMemo(() => {
@@ -28,7 +32,7 @@ export default function VibeCheck() {
 
   const reset = () => {
     setQIndex(i => (i + 1) % QUESTIONS.length);
-    setVotes({ Aarav: null, Rohan: null, Vikram: null });
+    setVotes(Object.fromEntries(ROOMMATES.map(r => [r, null])));
   };
 
   const share = async () => {

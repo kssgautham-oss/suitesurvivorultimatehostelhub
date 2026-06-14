@@ -1,7 +1,8 @@
 import { createFileRoute } from "@tanstack/react-router";
 import AuthScreen from "@/components/AuthScreen";
 import Dashboard from "@/components/Dashboard";
-import { useAuth } from "@/lib/mock-store";
+import RoomSetup from "@/components/RoomSetup";
+import { useAuth, useRoom } from "@/lib/mock-store";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -17,5 +18,8 @@ export const Route = createFileRoute("/")({
 
 function Index() {
   const user = useAuth();
-  return user ? <Dashboard /> : <AuthScreen />;
+  const room = useRoom();
+  if (!user) return <AuthScreen />;
+  if (!room) return <RoomSetup />;
+  return <Dashboard />;
 }
