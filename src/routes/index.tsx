@@ -1,29 +1,21 @@
 import { createFileRoute } from "@tanstack/react-router";
+import AuthScreen from "@/components/AuthScreen";
+import Dashboard from "@/components/Dashboard";
+import { useAuth } from "@/lib/mock-store";
 
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
-      { title: "Your App" },
-      { name: "description", content: "Replace this with a one-sentence description of your app." },
-      { property: "og:title", content: "Your App" },
-      { property: "og:description", content: "Replace this with a one-sentence description of your app." },
+      { title: "Hostel Harmony — Survive the 3-person room" },
+      { name: "description", content: "A Gen-Z mobile-first app to vibe, split, and snack with your hostel roommates." },
+      { property: "og:title", content: "Hostel Harmony" },
+      { property: "og:description", content: "Vibe Check, 3-Way Split, and Midnight Pantry AI for student hostels." },
     ],
   }),
   component: Index,
 });
 
-// IMPORTANT: Replace this placeholder. See ./README.md for routing conventions.
 function Index() {
-  return (
-    <div
-      className="flex min-h-screen items-center justify-center"
-      style={{ backgroundColor: "#fcfbf8" }}
-    >
-      <img
-        data-lovable-blank-page-placeholder="REMOVE_THIS"
-        src="https://cdn.gpteng.co/blank-app-v1.svg"
-        alt="Your app will live here!"
-      />
-    </div>
-  );
+  const user = useAuth();
+  return user ? <Dashboard /> : <AuthScreen />;
 }
