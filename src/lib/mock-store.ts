@@ -6,7 +6,14 @@ const ROOM_KEY = "hostel-harmony-room";
 type User = { name: string; email: string };
 export type Room = { code: string; roommates: [string, string, string] };
 export type SeedExpense = { id: string; label: string; amount: number; paidBy: string };
-export type SeedVibe = { question: string; votes: Record<string, string> };
+export type SeedVibe = {
+  question: string;
+  votes: Record<string, string>;
+  percentages?: Record<string, number>;
+  completedQuestion?: string;
+  completedWinner?: string;
+  upcomingQuestion?: string;
+};
 
 const listeners = new Set<() => void>();
 const roomListeners = new Set<() => void>();
