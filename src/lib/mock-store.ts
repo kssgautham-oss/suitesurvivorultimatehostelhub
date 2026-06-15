@@ -97,13 +97,17 @@ export function consumeSeedVibe() {
 export function enableDemoMode() {
   const roommates: [string, string, string] = ["Rahul", "Karthik", "You"];
   seedExpenses = [
-    { id: "d1", label: "Rent", amount: 3000, paidBy: "You" },
-    { id: "d2", label: "Wifi", amount: 600, paidBy: "Rahul" },
-    { id: "d3", label: "Groceries", amount: 450, paidBy: "Karthik" },
+    { id: "d1", label: "Rent Split", amount: 3000, paidBy: "You" },
+    { id: "d2", label: "Wifi Bill", amount: 600, paidBy: "Rahul" },
+    { id: "d3", label: "Emergency Midnight Maggi Supplies", amount: 450, paidBy: "Karthik" },
   ];
   seedVibe = {
-    question: "Who ate the last Maggi?",
-    votes: { Rahul: "Karthik", Karthik: "Karthik", You: "Karthik" },
+    question: "Who left the empty milk packet inside the induction kettle and burnt the base again?",
+    votes: { Rahul: "Rahul", Karthik: "Rahul", You: "Karthik" },
+    percentages: { Rahul: 60, Karthik: 30, You: 10 },
+    completedQuestion: "Who is genuinely responsible for the absolute biohazard fermenting in our trash can right now?",
+    completedWinner: "Karthik",
+    upcomingQuestion: "Are we allowing Rahul's loud gaming friend to crash on our floor this upcoming weekend?",
   };
   setUser({ name: "Demo Judge", email: "judge@suitesurvivor.app" });
   setRoom({ code: "SUITE-DEMO", roommates });
