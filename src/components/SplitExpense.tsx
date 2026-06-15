@@ -1,16 +1,13 @@
 import { useMemo, useState } from "react";
-import { Plus, Trash2, Wallet } from "lucide-react";
-import { useRoom } from "@/lib/mock-store";
+import { Plus, Trash2, Wallet, Receipt } from "lucide-react";
+import { useRoom, consumeSeedExpenses, type SeedExpense } from "@/lib/mock-store";
 
-type Expense = { id: string; label: string; amount: number; paidBy: string };
+type Expense = SeedExpense;
 
 export default function SplitExpense() {
   const room = useRoom();
   const ROOMMATES = room?.roommates ?? ["A", "B", "C"];
-  const [items, setItems] = useState<Expense[]>([
-    { id: "1", label: "Internet Bill", amount: 900, paidBy: ROOMMATES[0] },
-    { id: "2", label: "Maggi Stash", amount: 240, paidBy: ROOMMATES[1] },
-  ]);
+  const [items, setItems] = useState<Expense[]>(() => consumeSeedExpenses() ?? []);
   const [label, setLabel] = useState("");
   const [amount, setAmount] = useState("");
   const [paidBy, setPaidBy] = useState(ROOMMATES[0]);
@@ -33,6 +30,7 @@ export default function SplitExpense() {
   }, [items, ROOMMATES]);
 
   const max = Math.max(1, ...Object.values(balances).map(Math.abs));
+  const hasItems = items.length > 0;
 
   return (
     <div className="space-y-5 animate-pop-in">
@@ -42,30 +40,38 @@ export default function SplitExpense() {
         </div>
         <h3 className="mt-2 text-2xl font-bold">Who owes who?</h3>
 
-        <div className="mt-5 space-y-3">
-          {ROOMMATES.map(r => {
-            const bal = balances[r];
-            const positive = bal >= 0;
-            const pct = (Math.abs(bal) / max) * 100;
-            return (
-              <div key={r} className="glass rounded-2xl p-3">
-                <div className="flex items-center justify-between mb-2">
-                  <span className="font-semibold">{r}</span>
-                  <span className={`text-sm font-bold ${positive ? "text-success" : "text-electric-orange"}`}>
-                    {positive ? "+" : "−"}₹{Math.abs(bal).toFixed(0)}
-                  </span>
+        {hasItems ? (
+          <div className="mt-5 space-y-3">
+            {ROOMMATES.map(r => {
+              const bal = balances[r];
+              const positive = bal >= 0;
+              const pct = (Math.abs(bal) / max) * 100;
+              return (
+                <div key={r} className="glass rounded-2xl p-3">
+                  <div className="flex items-center justify-between mb-2">
+                    <span className="font-semibold">{r}</span>
+                    <span className={`text-sm font-bold ${positive ? "text-success" : "text-electric-orange"}`}>
+                      {positive ? "+" : "−"}₹{Math.abs(bal).toFixed(0)}
+                    </span>
+                  </div>
+                  <div className="h-2 rounded-full bg-white/10 overflow-hidden">
+                    <div
+                      className={`h-full rounded-full transition-all duration-700 ${positive ? "bg-success" : "gradient-brand"}`}
+                      style={{ width: `${pct}%` }}
+                    />
+                  </div>
+                  <p className="mt-1 text-[10px] text-muted-foreground">{positive ? "Gets back" : "Owes"} to the group</p>
                 </div>
-                <div className="h-2 rounded-full bg-white/10 overflow-hidden">
-                  <div
-                    className={`h-full rounded-full transition-all duration-700 ${positive ? "bg-success" : "gradient-brand"}`}
-                    style={{ width: `${pct}%` }}
-                  />
-                </div>
-                <p className="mt-1 text-[10px] text-muted-foreground">{positive ? "Gets back" : "Owes"} to the group</p>
-              </div>
-            );
-          })}
-        </div>
+              );
+            })}
+          </div>
+        ) : (
+          <div className="mt-5 glass rounded-2xl p-6 text-center">
+            <Receipt className="h-8 w-8 mx-auto text-muted-foreground mb-2" />
+            <p className="text-sm font-semibold">Your room has zero expenses.</p>
+            <p className="text-xs text-muted-foreground mt-1">Either you're all monks, or someone is hiding the bills. Add one below 👇</p>
+          </div>
+        )}
       </div>
 
       <div className="glass-strong rounded-3xl p-5 space-y-3">
