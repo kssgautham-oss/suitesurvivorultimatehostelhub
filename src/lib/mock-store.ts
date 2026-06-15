@@ -5,11 +5,15 @@ const ROOM_KEY = "hostel-harmony-room";
 
 type User = { name: string; email: string };
 export type Room = { code: string; roommates: [string, string, string] };
+export type SeedExpense = { id: string; label: string; amount: number; paidBy: string };
+export type SeedVibe = { question: string; votes: Record<string, string> };
 
 const listeners = new Set<() => void>();
 const roomListeners = new Set<() => void>();
 let current: User | null = null;
 let currentRoom: Room | null = null;
+let seedExpenses: SeedExpense[] | null = null;
+let seedVibe: SeedVibe | null = null;
 
 if (typeof window !== "undefined") {
   try {
@@ -29,6 +33,8 @@ export function setUser(u: User | null) {
       localStorage.removeItem(KEY);
       localStorage.removeItem(ROOM_KEY);
       currentRoom = null;
+      seedExpenses = null;
+      seedVibe = null;
       roomListeners.forEach(fn => fn());
     }
   }
@@ -68,4 +74,30 @@ export function useRoom() {
 export function generateRoomCode() {
   const n = Math.floor(100000 + Math.random() * 900000);
   return `SUITE-${n.toString().slice(0, 3)}`;
+}
+
+export function consumeSeedExpenses() {
+  const s = seedExpenses;
+  seedExpenses = null;
+  return s;
+}
+export function consumeSeedVibe() {
+  const s = seedVibe;
+  seedVibe = null;
+  return s;
+}
+
+export function enableDemoMode() {
+  const roommates: [string, string, string] = ["Rahul", "Karthik", "You"];
+  seedExpenses = [
+    { id: "d1", label: "Rent", amount: 3000, paidBy: "You" },
+    { id: "d2", label: "Wifi", amount: 600, paidBy: "Rahul" },
+    { id: "d3", label: "Groceries", amount: 450, paidBy: "Karthik" },
+  ];
+  seedVibe = {
+    question: "Who ate the last Maggi?",
+    votes: { Rahul: "Karthik", Karthik: "Karthik", You: "Karthik" },
+  };
+  setUser({ name: "Demo Judge", email: "judge@suitesurvivor.app" });
+  setRoom({ code: "SUITE-DEMO", roommates });
 }

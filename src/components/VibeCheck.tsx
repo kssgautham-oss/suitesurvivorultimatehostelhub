@@ -1,6 +1,7 @@
 import { useMemo, useState } from "react";
-import { Share2, RotateCw, Flame } from "lucide-react";
-import { useRoom } from "@/lib/mock-store";
+import { Share2, RotateCw, Flame, Link2 } from "lucide-react";
+import { toast } from "sonner";
+import { useRoom, consumeSeedVibe } from "@/lib/mock-store";
 
 const QUESTIONS = [
   "Who is most likely to leave the AC running?",
@@ -14,13 +15,18 @@ const QUESTIONS = [
 export default function VibeCheck() {
   const room = useRoom();
   const ROOMMATES = room?.roommates ?? ["A", "B", "C"];
+
+  const seed = useMemo(() => consumeSeedVibe(), []);
+  const [customQ, setCustomQ] = useState<string | null>(seed?.question ?? null);
   const [qIndex, setQIndex] = useState(0);
   const [votes, setVotes] = useState<Record<string, string | null>>(
-    Object.fromEntries(ROOMMATES.map(r => [r, null]))
+    seed
+      ? Object.fromEntries(ROOMMATES.map(r => [r, seed.votes[r] ?? null]))
+      : Object.fromEntries(ROOMMATES.map(r => [r, null]))
   );
 
   const allVoted = ROOMMATES.every(r => votes[r]);
-  const question = QUESTIONS[qIndex];
+  const question = customQ ?? QUESTIONS[qIndex];
 
   const verdict = useMemo(() => {
     const tally: Record<string, number> = {};
@@ -31,16 +37,22 @@ export default function VibeCheck() {
   }, [votes]);
 
   const reset = () => {
+    setCustomQ(null);
     setQIndex(i => (i + 1) % QUESTIONS.length);
     setVotes(Object.fromEntries(ROOMMATES.map(r => [r, null])));
   };
 
   const share = async () => {
-    const text = `🔥 Hostel Harmony Verdict: ${verdict.winner} — "${question}" #RoomieDrama`;
-    if (navigator.share) {
-      try { await navigator.share({ text, title: "Hostel Harmony" }); } catch {}
-    } else {
-      window.open(`https://wa.me/?text=${encodeURIComponent(text)}`, "_blank");
+    const text = `🔥 SuiteSurvivor Verdict: ${verdict.winner} wins "${question}" — ${verdict.max}/${ROOMMATES.length} votes. #RoomieDrama\n\nPick your own hot take at ${typeof window !== "undefined" ? window.location.origin : "suitesurvivor.app"}`;
+    try {
+      await navigator.clipboard.writeText(text);
+      toast.success("Copied to clipboard!");
+    } catch {
+      if (navigator.share) {
+        try { await navigator.share({ text, title: "SuiteSurvivor" }); } catch {}
+      } else {
+        toast.error("Couldn't copy. Long-press to share manually.");
+      }
     }
   };
 
@@ -84,7 +96,7 @@ export default function VibeCheck() {
             <p className="text-xs uppercase tracking-[0.3em] opacity-80">The Verdict Is In</p>
             <h2 className="text-4xl font-black drop-shadow-lg">{verdict.winner}</h2>
             <p className="text-sm opacity-90 italic">"{question}"</p>
-            <div className="flex items-center justify-center gap-2 pt-1">
+            <div className="flex items-center justify-center gap-2 pt-1 flex-wrap">
               {ROOMMATES.map(r => (
                 <span key={r} className={`px-2 py-1 rounded-full text-[10px] font-bold ${r === verdict.winner ? "bg-white text-neon-purple" : "bg-white/20"}`}>
                   {r} · {verdict.tally[r] ?? 0}
@@ -93,7 +105,7 @@ export default function VibeCheck() {
             </div>
             <div className="flex gap-2 pt-3">
               <button onClick={share} className="flex-1 py-2.5 rounded-xl bg-white text-neon-purple font-bold flex items-center justify-center gap-2 hover:scale-[1.02] transition">
-                <Share2 className="h-4 w-4" /> Share Verdict
+                <Link2 className="h-4 w-4" /> 🔗 Share Verdict
               </button>
               <button onClick={reset} className="px-4 py-2.5 rounded-xl bg-white/20 backdrop-blur font-bold flex items-center justify-center gap-2 hover:bg-white/30 transition">
                 <RotateCw className="h-4 w-4" />

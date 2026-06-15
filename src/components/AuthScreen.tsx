@@ -1,6 +1,6 @@
 import { useState } from "react";
-import { Eye, EyeOff, Loader2, Mail, Lock, User as UserIcon, KeyRound, Check } from "lucide-react";
-import { setUser } from "@/lib/mock-store";
+import { Eye, EyeOff, Loader2, Mail, Lock, User as UserIcon, KeyRound, Check, Sparkles } from "lucide-react";
+import { setUser, enableDemoMode } from "@/lib/mock-store";
 
 const GoogleIcon = () => (
   <svg viewBox="0 0 48 48" className="h-5 w-5">
@@ -131,6 +131,16 @@ export default function AuthScreen() {
           >
             {loading === "facebook" ? <Loader2 className="h-5 w-5 animate-spin" /> : <><FacebookIcon /> Sign in with Facebook</>}
           </button>
+
+          <button
+            onClick={enableDemoMode}
+            disabled={!!loading}
+            className="w-full mt-3 py-3 rounded-2xl gradient-brand glow-purple text-white font-bold flex items-center justify-center gap-2 hover:scale-[1.02] active:scale-[0.98] transition relative overflow-hidden disabled:opacity-70"
+          >
+            <Sparkles className="h-4 w-4" />
+            ✨ Quick Demo Mode
+          </button>
+          <p className="text-[11px] text-center text-muted-foreground -mt-1">Skip auth · instant judge tour with mock data</p>
         </div>
       </div>
     </div>
