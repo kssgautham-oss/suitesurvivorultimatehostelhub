@@ -88,8 +88,8 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { name: "twitter:site", content: "@Lovable" },
       { name: "twitter:title", content: "SuiteSurvivor: Ultimate Hostel Hub" },
       { name: "twitter:description", content: "Ecosystem for tracking, managing & resolving drama before it starts." },
-      { property: "og:image", content: "https://storage.googleapis.com/gpt-engineer-file-uploads/hcVFd9pszlguwyWLKHa6Ax9W3Bq1/social-images/social-1781455299232-f0c202ef-6bba-476b-ae4d-6092652917e9.webp" },
-      { name: "twitter:image", content: "https://storage.googleapis.com/gpt-engineer-file-uploads/hcVFd9pszlguwyWLKHa6Ax9W3Bq1/social-images/social-1781455299232-f0c202ef-6bba-476b-ae4d-6092652917e9.webp" },
+      { property: "og:image", content: "https://storage.googleapis.com/gpt-engineer-file-uploads/hcVFd9pszlguwyWLKHa6Ax9W3Bq1/social-images/social-1781582258069-Gemini_Generated_Image_cxrisecxrisecxri.webp" },
+      { name: "twitter:image", content: "https://storage.googleapis.com/gpt-engineer-file-uploads/hcVFd9pszlguwyWLKHa6Ax9W3Bq1/social-images/social-1781582258069-Gemini_Generated_Image_cxrisecxrisecxri.webp" },
     ],
     links: [
       { rel: "stylesheet", href: appCss },
