@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Eye, EyeOff, Loader2, Mail, Lock, User as UserIcon, KeyRound, Check, Sparkles } from "lucide-react";
+import { Eye, EyeOff, Loader2, Mail, Lock, User as UserIcon, KeyRound, Check, Sparkles, Shield } from "lucide-react";
 import { setUser, enableDemoMode } from "@/lib/mock-store";
 
 const GoogleIcon = () => (
