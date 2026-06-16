@@ -36,7 +36,7 @@ export default function SplitExpense() {
     <div className="space-y-5 animate-pop-in">
       <div className="glass-strong rounded-3xl p-5">
         <div className="flex items-center gap-2 text-xs uppercase tracking-widest text-electric-orange font-bold">
-          <Wallet className="h-3.5 w-3.5" /> 3-Way Split
+          <Wallet className="h-3.5 w-3.5" /> {ROOMMATES.length}-Way Split
         </div>
         <h3 className="mt-2 text-2xl font-bold">Who owes who?</h3>
 
