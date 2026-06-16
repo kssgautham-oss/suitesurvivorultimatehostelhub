@@ -44,7 +44,7 @@ export default function AuthScreen() {
       <div className="relative w-full max-w-md glass-strong rounded-3xl p-6 sm:p-8 animate-pop-in">
         <div className="text-center mb-6">
           <div className="mx-auto h-14 w-14 rounded-2xl gradient-brand grid place-items-center glow-purple mb-3">
-            <span className="text-2xl">🏠</span>
+            <Shield className="h-7 w-7 text-white" strokeWidth={2.5} />
           </div>
           <h1 className="text-3xl font-bold text-gradient">SuiteSurvivor</h1>
           <p className="text-sm text-muted-foreground mt-1">Ecosystem for tracking, managing & resolving drama before it starts.</p>
