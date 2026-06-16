@@ -7,10 +7,10 @@ import { useAuth, useRoom } from "@/lib/mock-store";
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
-      { title: "Hostel Harmony — Survive the 3-person room" },
+      { title: "SuiteSurvivor" },
       { name: "description", content: "A Gen-Z mobile-first app to vibe, split, and snack with your hostel roommates." },
-      { property: "og:title", content: "Hostel Harmony" },
-      { property: "og:description", content: "Vibe Check, 3-Way Split, and Midnight Pantry AI for student hostels." },
+      { property: "og:title", content: "SuiteSurvivor" },
+      { property: "og:description", content: "Ecosystem for tracking, managing & resolving drama before it starts." },
     ],
   }),
   component: Index,

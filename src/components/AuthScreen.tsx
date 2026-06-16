@@ -46,8 +46,8 @@ export default function AuthScreen() {
           <div className="mx-auto h-14 w-14 rounded-2xl gradient-brand grid place-items-center glow-purple mb-3">
             <span className="text-2xl">🏠</span>
           </div>
-          <h1 className="text-3xl font-bold text-gradient">Hostel Harmony</h1>
-          <p className="text-sm text-muted-foreground mt-1">Survive the 3-person room. Together.</p>
+          <h1 className="text-3xl font-bold text-gradient">SuiteSurvivor</h1>
+          <p className="text-sm text-muted-foreground mt-1">Ecosystem for tracking, managing & resolving drama before it starts.</p>
         </div>
 
         <div className="relative grid grid-cols-2 p-1 rounded-full glass mb-6">
