@@ -1,7 +1,7 @@
 import { useMemo, useState } from "react";
-import { RotateCw, Flame, Link2, CheckCircle2, Clock } from "lucide-react";
+import { RotateCw, Flame, Link2, CheckCircle2, Clock, Plus, X, Sparkles, Wand2 } from "lucide-react";
 import { toast } from "sonner";
-import { useRoom, consumeSeedVibe, type SeedVibe } from "@/lib/mock-store";
+import { useRoom, consumeSeedVibe, useCustomPolls, addCustomPoll, voteCustomPoll, type SeedVibe } from "@/lib/mock-store";
 
 const QUESTIONS = [
   "Who left the empty milk packet inside the induction kettle and burnt the base again?",
@@ -26,6 +26,11 @@ export default function VibeCheck() {
       ? Object.fromEntries(ROOMMATES.map(r => [r, seed.votes[r] ?? null]))
       : Object.fromEntries(ROOMMATES.map(r => [r, null]))
   );
+
+  const polls = useCustomPolls();
+  const [builderOpen, setBuilderOpen] = useState(false);
+  const [newQ, setNewQ] = useState("");
+  const [newOpts, setNewOpts] = useState<string[]>(["", ""]);
 
   const allVoted = ROOMMATES.every(r => votes[r]);
   const question = customQ ?? QUESTIONS[qIndex];
@@ -59,16 +64,107 @@ export default function VibeCheck() {
       await navigator.clipboard.writeText(text);
       toast.success("Copied to clipboard!");
     } catch {
-      if (navigator.share) {
-        try { await navigator.share({ text, title: "SuiteSurvivor" }); } catch {}
-      } else {
-        toast.error("Couldn't copy. Long-press to share manually.");
-      }
+      toast.error("Couldn't copy. Long-press to share manually.");
     }
+  };
+
+  const submitPoll = () => {
+    const opts = newOpts.map(o => o.trim()).filter(Boolean);
+    if (!newQ.trim() || opts.length < 2) {
+      toast.error("Need a question and at least 2 options.");
+      return;
+    }
+    addCustomPoll({ question: newQ.trim(), options: opts, source: "user" });
+    toast.success("Poll launched! 🚀");
+    setNewQ(""); setNewOpts(["", ""]); setBuilderOpen(false);
   };
 
   return (
     <div className="space-y-5 animate-pop-in">
+      {/* Custom Poll Builder trigger */}
+      <button
+        onClick={() => setBuilderOpen(o => !o)}
+        className="w-full glass-strong rounded-3xl p-4 flex items-center gap-3 hover:bg-white/10 transition group"
+      >
+        <div className="h-10 w-10 rounded-2xl gradient-brand grid place-items-center glow-purple group-hover:scale-110 transition">
+          {builderOpen ? <X className="h-5 w-5 text-white" /> : <Plus className="h-5 w-5 text-white" />}
+        </div>
+        <div className="text-left flex-1">
+          <p className="font-bold text-sm">Create Custom Poll</p>
+          <p className="text-[11px] text-muted-foreground">Drop your own roomie drama for a vote</p>
+        </div>
+        <Sparkles className="h-4 w-4 text-electric-orange" />
+      </button>
+
+      {builderOpen && (
+        <div className="glass-strong rounded-3xl p-5 space-y-3 animate-pop-in">
+          <p className="text-[10px] uppercase tracking-widest text-electric-orange font-bold">New Poll</p>
+          <input
+            value={newQ}
+            onChange={e => setNewQ(e.target.value)}
+            placeholder="e.g. Who forgot to lock the main door?"
+            className="w-full px-4 py-3 rounded-2xl glass outline-none text-sm border border-white/10 focus:border-neon-purple/60"
+          />
+          <div className="space-y-2">
+            {newOpts.map((o, i) => (
+              <div key={i} className="flex items-center gap-2">
+                <input
+                  value={o}
+                  onChange={e => setNewOpts(arr => arr.map((v, idx) => idx === i ? e.target.value : v))}
+                  placeholder={`Option ${i + 1}`}
+                  className="flex-1 px-4 py-2.5 rounded-2xl glass outline-none text-sm border border-white/10 focus:border-neon-purple/60"
+                />
+                {newOpts.length > 2 && (
+                  <button onClick={() => setNewOpts(arr => arr.filter((_, idx) => idx !== i))} className="h-9 w-9 grid place-items-center rounded-full glass hover:bg-destructive/20">
+                    <X className="h-3.5 w-3.5" />
+                  </button>
+                )}
+              </div>
+            ))}
+            {newOpts.length < 4 && (
+              <button onClick={() => setNewOpts(arr => [...arr, ""])} className="text-xs text-electric-orange font-semibold flex items-center gap-1 hover:underline">
+                <Plus className="h-3 w-3" /> Add option ({4 - newOpts.length} left)
+              </button>
+            )}
+          </div>
+          <button onClick={submitPoll} className="w-full py-3 rounded-2xl gradient-brand text-white font-bold glow-purple flex items-center justify-center gap-2 hover:scale-[1.02] active:scale-[0.98] transition">
+            <Wand2 className="h-4 w-4" /> Launch Poll
+          </button>
+        </div>
+      )}
+
+      {/* Live custom polls */}
+      {polls.map(p => {
+        const total = Object.values(p.tally).reduce((a, b) => a + b, 0);
+        return (
+          <div key={p.id} className="glass-strong rounded-3xl p-5 animate-pop-in">
+            <div className="flex items-center gap-2 text-xs uppercase tracking-widest text-neon-purple font-bold">
+              <Sparkles className="h-3.5 w-3.5" /> {p.source === "onboarding" ? "Auto-Generated Poll" : "Custom Poll"}
+            </div>
+            <h3 className="mt-2 text-lg font-bold leading-snug">{p.question}</h3>
+            <div className="mt-4 space-y-2">
+              {p.options.map(opt => {
+                const count = p.tally[opt] ?? 0;
+                const pct = total > 0 ? Math.round((count / total) * 100) : 0;
+                return (
+                  <button
+                    key={opt}
+                    onClick={() => voteCustomPoll(p.id, opt)}
+                    className="w-full relative overflow-hidden glass rounded-2xl p-3 text-left hover:bg-white/15 transition"
+                  >
+                    <div className="absolute inset-y-0 left-0 gradient-brand opacity-30 transition-all duration-500" style={{ width: `${pct}%` }} />
+                    <div className="relative flex items-center justify-between">
+                      <span className="text-sm font-semibold">{opt}</span>
+                      <span className="text-xs font-bold text-gradient">{pct}% · {count}</span>
+                    </div>
+                  </button>
+                );
+              })}
+            </div>
+          </div>
+        );
+      })}
+
       <div className="glass-strong rounded-3xl p-5">
         <div className="flex items-center gap-2 text-xs uppercase tracking-widest text-electric-orange font-bold">
           <Flame className="h-3.5 w-3.5" /> Active Poll
@@ -81,7 +177,7 @@ export default function VibeCheck() {
               <p className="text-xs text-muted-foreground mb-2">
                 <span className="font-semibold text-foreground">{voter}</span> votes for…
               </p>
-              <div className="grid grid-cols-3 gap-2">
+              <div className={`grid gap-2`} style={{ gridTemplateColumns: `repeat(${ROOMMATES.length}, minmax(0, 1fr))` }}>
                 {ROOMMATES.map(target => {
                   const picked = votes[voter] === target;
                   return (
