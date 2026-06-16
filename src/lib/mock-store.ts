@@ -4,7 +4,7 @@ const KEY = "hostel-harmony-auth";
 const ROOM_KEY = "hostel-harmony-room";
 
 type User = { name: string; email: string };
-export type Room = { code: string; roommates: [string, string, string] };
+export type Room = { code: string; roommates: string[] };
 export type SeedExpense = { id: string; label: string; amount: number; paidBy: string };
 export type SeedVibe = {
   question: string;
@@ -15,12 +15,22 @@ export type SeedVibe = {
   upcomingQuestion?: string;
 };
 
+export type CustomPoll = {
+  id: string;
+  question: string;
+  options: string[];
+  tally: Record<string, number>;
+  source?: "user" | "onboarding";
+};
+
 const listeners = new Set<() => void>();
 const roomListeners = new Set<() => void>();
+const pollListeners = new Set<() => void>();
 let current: User | null = null;
 let currentRoom: Room | null = null;
 let seedExpenses: SeedExpense[] | null = null;
 let seedVibe: SeedVibe | null = null;
+let customPolls: CustomPoll[] = [];
 
 if (typeof window !== "undefined") {
   try {
@@ -42,7 +52,9 @@ export function setUser(u: User | null) {
       currentRoom = null;
       seedExpenses = null;
       seedVibe = null;
+      customPolls = [];
       roomListeners.forEach(fn => fn());
+      pollListeners.forEach(fn => fn());
     }
   }
   listeners.forEach(fn => fn());
@@ -94,8 +106,37 @@ export function consumeSeedVibe() {
   return s;
 }
 
+export function getCustomPolls() { return customPolls; }
+export function addCustomPoll(p: Omit<CustomPoll, "id" | "tally">) {
+  const poll: CustomPoll = {
+    id: Date.now().toString() + Math.random().toString(36).slice(2, 6),
+    question: p.question,
+    options: p.options,
+    tally: Object.fromEntries(p.options.map(o => [o, 0])),
+    source: p.source ?? "user",
+  };
+  customPolls = [poll, ...customPolls];
+  pollListeners.forEach(fn => fn());
+  return poll;
+}
+export function voteCustomPoll(id: string, option: string) {
+  customPolls = customPolls.map(p =>
+    p.id === id ? { ...p, tally: { ...p.tally, [option]: (p.tally[option] ?? 0) + 1 } } : p
+  );
+  pollListeners.forEach(fn => fn());
+}
+export function useCustomPolls() {
+  const [polls, setPolls] = useState<CustomPoll[]>(customPolls);
+  useEffect(() => {
+    const fn = () => setPolls([...customPolls]);
+    pollListeners.add(fn);
+    return () => { pollListeners.delete(fn); };
+  }, []);
+  return polls;
+}
+
 export function enableDemoMode() {
-  const roommates: [string, string, string] = ["Rahul", "Karthik", "You"];
+  const roommates = ["Rahul", "Karthik", "You"];
   seedExpenses = [
     { id: "d1", label: "Rent Split", amount: 3000, paidBy: "You" },
     { id: "d2", label: "Wifi Bill", amount: 600, paidBy: "Rahul" },
@@ -109,6 +150,7 @@ export function enableDemoMode() {
     completedWinner: "Karthik",
     upcomingQuestion: "Are we allowing Rahul's loud gaming friend to crash on our floor this upcoming weekend?",
   };
+  customPolls = [];
   setUser({ name: "Demo Judge", email: "judge@suitesurvivor.app" });
   setRoom({ code: "SUITE-DEMO", roommates });
 }
