@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Sparkles, Wallet, ChefHat, LogOut, Scale, Gavel } from "lucide-react";
+import { Sparkles, Wallet, ChefHat, LogOut, Scale, Flame } from "lucide-react";
 import { setUser, useAuth } from "@/lib/mock-store";
 import VibeCheck from "./VibeCheck";
 import SplitExpense from "./SplitExpense";
@@ -42,7 +42,7 @@ export default function Dashboard() {
           { k: "vibe", label: "Vibe", icon: Sparkles },
           { k: "split", label: "Split", icon: Wallet },
           { k: "court", label: "Court", icon: Scale },
-          { k: "tribunal", label: "Jury", icon: Gavel },
+          { k: "tribunal", label: "Drama", icon: Flame },
           { k: "pantry", label: "Pantry", icon: ChefHat },
         ].map(({ k, label, icon: Icon }) => {
           const active = tab === k;
