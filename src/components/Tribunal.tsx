@@ -1,13 +1,16 @@
 import { useState } from "react";
-import { Gavel, Plus, Eye, EyeOff, Sparkles, X } from "lucide-react";
+import { Gavel, Plus, Eye, EyeOff, Sparkles, X, Flame, Coffee, Scale as ScaleIcon } from "lucide-react";
 import { toast } from "sonner";
 import { useRoom } from "@/lib/mock-store";
 
 type Perspective = {
   id: string;
-  juror: string; // roommate slot index label, kept anonymous in UI
+  juror: string;
   text: string;
+  vibe: "🫣" | "😤" | "💀" | "🧘" | "🔥";
 };
+
+type OpinionVote = { voter: string; suspect: string; intensity: number }; // intensity 0-100
 
 type Incident = {
   id: string;
@@ -16,20 +19,27 @@ type Incident = {
   filedBy: string;
   createdAt: number;
   perspectives: Perspective[];
+  opinions: OpinionVote[];
 };
 
 const SEED_TITLES = [
   "The Case of the Vanishing Maggi",
   "The Great Wi-Fi Hostage Crisis",
   "Operation Wet Towel on My Bed",
+  "Who Killed the Last Parle-G",
 ];
+
+const VIBES: Perspective["vibe"][] = ["🫣", "😤", "💀", "🧘", "🔥"];
 
 export default function Tribunal() {
   const room = useRoom();
   const names = room?.roommates ?? ["A", "B", "C"];
+  const suspects = [...names, "The Ghost 👻", "Nobody, chill"];
+
   const [incidents, setIncidents] = useState<Incident[]>([]);
   const [openFile, setOpenFile] = useState(false);
-  const [openCase, setOpenCase] = useState<Incident | null>(null);
+  const [openPOV, setOpenPOV] = useState<Incident | null>(null);
+  const [openOpinion, setOpenOpinion] = useState<Incident | null>(null);
   const [reveal, setReveal] = useState<Record<string, boolean>>({});
 
   // file form
@@ -37,11 +47,17 @@ export default function Tribunal() {
   const [crime, setCrime] = useState("");
   const [filedBy, setFiledBy] = useState(names[0]);
 
-  // perspective form
+  // pov form
   const [pJuror, setPJuror] = useState(names[0]);
   const [pText, setPText] = useState("");
+  const [pVibe, setPVibe] = useState<Perspective["vibe"]>("🫣");
 
-  const fileCase = () => {
+  // opinion form
+  const [oVoter, setOVoter] = useState(names[0]);
+  const [oSuspect, setOSuspect] = useState(suspects[0]);
+  const [oIntensity, setOIntensity] = useState(60);
+
+  const spillTea = () => {
     if (!crime.trim()) return;
     const inc: Incident = {
       id: Date.now().toString(36),
@@ -50,26 +66,42 @@ export default function Tribunal() {
       filedBy,
       createdAt: Date.now(),
       perspectives: [],
+      opinions: [],
     };
     setIncidents([inc, ...incidents]);
     setTitle(""); setCrime(""); setFiledBy(names[0]);
     setOpenFile(false);
-    toast.success("Case filed. The tribunal awaits testimony. 🪑");
+    toast.success("Tea spilled. The room is watching. ☕🔥");
   };
 
-  const submitPerspective = () => {
-    if (!openCase || !pText.trim()) return;
+  const submitPOV = () => {
+    if (!openPOV || !pText.trim()) return;
     const updated: Incident = {
-      ...openCase,
+      ...openPOV,
       perspectives: [
-        ...openCase.perspectives,
-        { id: Date.now().toString(36), juror: pJuror, text: pText.trim() },
+        ...openPOV.perspectives,
+        { id: Date.now().toString(36), juror: pJuror, text: pText.trim(), vibe: pVibe },
       ],
     };
     setIncidents(incidents.map(i => (i.id === updated.id ? updated : i)));
-    setOpenCase(updated);
+    setOpenPOV(updated);
     setPText("");
-    toast.success("Testimony recorded anonymously. 🤐");
+    toast.success("POV added to the lore. 🎭");
+  };
+
+  const submitOpinion = () => {
+    if (!openOpinion) return;
+    const updated: Incident = {
+      ...openOpinion,
+      // one vote per voter — replace previous
+      opinions: [
+        ...openOpinion.opinions.filter(o => o.voter !== oVoter),
+        { voter: oVoter, suspect: oSuspect, intensity: oIntensity },
+      ],
+    };
+    setIncidents(incidents.map(i => (i.id === updated.id ? updated : i)));
+    setOpenOpinion(updated);
+    toast.success("Vote locked in. The room has spoken. ⚖️");
   };
 
   const toggleReveal = (id: string) =>
@@ -78,20 +110,22 @@ export default function Tribunal() {
   return (
     <div className="space-y-5 animate-pop-in">
       {/* Header */}
-      <div className="glass-strong rounded-3xl p-5">
-        <div className="flex items-center gap-2 text-xs uppercase tracking-widest text-electric-orange font-bold">
-          <Gavel className="h-3.5 w-3.5" /> The Tribunal
+      <div className="relative rounded-3xl p-[2px] gradient-brand glow-purple">
+        <div className="rounded-[calc(1.5rem-2px)] bg-background/85 backdrop-blur-2xl p-5">
+          <div className="flex items-center gap-2 text-xs uppercase tracking-[0.25em] text-electric-orange font-bold">
+            <Flame className="h-3.5 w-3.5" /> The Drama Board
+          </div>
+          <h3 className="mt-2 text-2xl font-black text-gradient">Hostel Tribunal 👀</h3>
+          <p className="text-xs text-muted-foreground mt-1">
+            Log the chaos. Drop your POV. Let the room decide who's guilty.
+          </p>
+          <button
+            onClick={() => setOpenFile(true)}
+            className="mt-4 w-full py-3.5 rounded-2xl gradient-brand text-white font-black glow-purple hover:scale-[1.02] active:scale-[0.98] transition flex items-center justify-center gap-2 text-base"
+          >
+            <Coffee className="h-5 w-5" /> Spill the Tea ☕
+          </button>
         </div>
-        <h3 className="mt-2 text-2xl font-bold">Incident Log</h3>
-        <p className="text-xs text-muted-foreground mt-1">
-          Log the crime. Let the jury speak. Survival-show style.
-        </p>
-        <button
-          onClick={() => setOpenFile(true)}
-          className="mt-4 w-full py-3 rounded-2xl gradient-brand text-white font-bold glow-purple hover:scale-[1.02] active:scale-[0.98] transition flex items-center justify-center gap-2"
-        >
-          <Plus className="h-4 w-4" /> File a New Incident
-        </button>
       </div>
 
       {/* Empty state */}
@@ -100,9 +134,9 @@ export default function Tribunal() {
           <div className="mx-auto h-12 w-12 rounded-2xl glass-strong grid place-items-center mb-2">
             <Gavel className="h-6 w-6 text-neon-pink" />
           </div>
-          <p className="text-sm font-bold">Court is in recess.</p>
+          <p className="text-sm font-bold">The board is suspiciously quiet.</p>
           <p className="text-xs text-muted-foreground mt-1">
-            No incidents logged yet. Either your room is a utopia, or someone is suppressing evidence.
+            No drama logged yet. Either you live in heaven, or somebody is hiding the receipts.
           </p>
         </div>
       )}
@@ -110,8 +144,10 @@ export default function Tribunal() {
       {/* Cases */}
       {incidents.map(inc => {
         const revealed = !!reveal[inc.id];
+        const verdict = computeVerdict(inc.opinions);
         return (
           <div key={inc.id} className="glass-strong rounded-3xl p-5 space-y-4">
+            {/* Title row */}
             <div className="flex items-start justify-between gap-2">
               <div className="min-w-0">
                 <p className="text-[10px] uppercase tracking-[0.25em] text-muted-foreground">
@@ -119,11 +155,17 @@ export default function Tribunal() {
                 </p>
                 <h4 className="text-lg font-black text-gradient mt-1 truncate">{inc.title}</h4>
               </div>
-              <span className="text-[10px] px-2 py-1 rounded-full glass text-neon-pink font-bold whitespace-nowrap">
-                {inc.perspectives.length} 🗣️
-              </span>
+              <div className="flex flex-col items-end gap-1">
+                <span className="text-[10px] px-2 py-1 rounded-full glass text-neon-pink font-bold whitespace-nowrap">
+                  {inc.perspectives.length} POV
+                </span>
+                <span className="text-[10px] px-2 py-1 rounded-full glass text-electric-orange font-bold whitespace-nowrap">
+                  {inc.opinions.length} votes
+                </span>
+              </div>
             </div>
 
+            {/* The crime */}
             <div className="glass rounded-2xl p-3">
               <p className="text-[10px] uppercase tracking-widest text-electric-orange font-bold mb-1">
                 🔥 The Alleged Crime
@@ -131,116 +173,157 @@ export default function Tribunal() {
               <p className="text-sm leading-relaxed">{inc.crime}</p>
             </div>
 
-            {/* Jury */}
-            {inc.perspectives.length > 0 && (
-              <div>
-                <div className="flex items-center justify-between mb-2">
-                  <p className="text-[10px] uppercase tracking-widest text-neon-purple font-bold">
-                    🪑 Jury Box · Different Possibilities
-                  </p>
+            {/* Lore Timeline */}
+            <div>
+              <div className="flex items-center justify-between mb-2">
+                <p className="text-[10px] uppercase tracking-widest text-neon-purple font-bold">
+                  🎭 The Lore Timeline
+                </p>
+                {inc.perspectives.length > 0 && (
                   <button
                     onClick={() => toggleReveal(inc.id)}
                     className="text-[10px] flex items-center gap-1 px-2 py-1 rounded-full glass hover:bg-white/15 transition"
                   >
                     {revealed ? <EyeOff className="h-3 w-3" /> : <Eye className="h-3 w-3" />}
-                    {revealed ? "Hide names" : "Reveal jury"}
+                    {revealed ? "Hide" : "Reveal"}
                   </button>
+                )}
+              </div>
+
+              {inc.perspectives.length === 0 ? (
+                <div className="glass rounded-2xl p-3 text-center">
+                  <p className="text-xs text-muted-foreground">
+                    No POVs yet. The lore is unwritten. Be the first storyteller.
+                  </p>
                 </div>
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+              ) : (
+                <div className="flex gap-2 overflow-x-auto pb-1 -mx-1 px-1 snap-x">
                   {inc.perspectives.map((p, i) => (
                     <div
                       key={p.id}
-                      className="relative rounded-2xl p-[1.5px] gradient-brand"
+                      className="snap-start shrink-0 w-[78%] sm:w-[48%] rounded-2xl p-[1.5px] gradient-brand"
                     >
-                      <div className="rounded-[calc(1rem-1.5px)] bg-background/80 backdrop-blur-xl p-3 h-full">
+                      <div className="rounded-[calc(1rem-1.5px)] bg-background/85 backdrop-blur-xl p-3 h-full flex flex-col">
                         <div className="flex items-center justify-between mb-1.5">
-                          <span className="text-[10px] font-bold uppercase tracking-widest text-electric-orange">
-                            Juror #{i + 1}
+                          <span className="text-[10px] font-black uppercase tracking-widest text-electric-orange">
+                            POV #{i + 1}
                           </span>
-                          <span className="text-[10px] text-muted-foreground">
-                            {revealed ? p.juror : "Anonymous"}
-                          </span>
+                          <span className="text-base">{p.vibe}</span>
                         </div>
-                        <p className="text-sm leading-relaxed italic">"{p.text}"</p>
+                        <p className="text-sm leading-relaxed italic flex-1">"{p.text}"</p>
+                        <p className="text-[10px] text-muted-foreground mt-2 pt-2 border-t border-white/10">
+                          — {revealed ? p.juror : "Anonymous Juror"}
+                        </p>
                       </div>
                     </div>
                   ))}
                 </div>
-              </div>
-            )}
+              )}
 
-            <button
-              onClick={() => { setOpenCase(inc); setPJuror(names[0]); setPText(""); }}
-              className="w-full py-2.5 rounded-2xl glass hover:bg-white/15 transition text-sm font-bold flex items-center justify-center gap-2"
-            >
-              <Sparkles className="h-4 w-4 text-neon-pink" /> Submit Your Perspective
-            </button>
+              <button
+                onClick={() => { setOpenPOV(inc); setPJuror(names[0]); setPText(""); setPVibe("🫣"); }}
+                className="mt-2 w-full py-2.5 rounded-2xl glass hover:bg-white/15 transition text-sm font-bold flex items-center justify-center gap-2"
+              >
+                <Plus className="h-4 w-4 text-neon-pink" /> Drop Your POV
+              </button>
+            </div>
+
+            {/* Opinion Tracker */}
+            <div>
+              <p className="text-[10px] uppercase tracking-widest text-neon-purple font-bold mb-2">
+                ⚖️ Opinion Tracker
+              </p>
+              {verdict.total === 0 ? (
+                <div className="glass rounded-2xl p-3 text-center">
+                  <p className="text-xs text-muted-foreground">
+                    No votes yet. The jury is still buffering…
+                  </p>
+                </div>
+              ) : (
+                <div className="glass rounded-2xl p-3 space-y-2">
+                  <div className="flex items-center justify-between">
+                    <span className="text-[10px] uppercase tracking-widest text-muted-foreground">Room consensus</span>
+                    <span className="text-xs font-black text-gradient">{verdict.topSuspect} · {verdict.topPct}%</span>
+                  </div>
+                  {verdict.bars.map(b => (
+                    <div key={b.suspect}>
+                      <div className="flex items-center justify-between text-xs mb-0.5">
+                        <span className="font-bold truncate">{b.suspect}</span>
+                        <span className="text-muted-foreground">{b.pct}%</span>
+                      </div>
+                      <div className="h-2 rounded-full bg-white/5 overflow-hidden">
+                        <div
+                          className="h-full gradient-brand"
+                          style={{ width: `${b.pct}%` }}
+                        />
+                      </div>
+                    </div>
+                  ))}
+                  <div className="pt-2 border-t border-white/10 flex items-center justify-between text-[10px] text-muted-foreground">
+                    <span>🌡️ Drama intensity</span>
+                    <span className="font-bold text-electric-orange">{verdict.avgIntensity}%</span>
+                  </div>
+                </div>
+              )}
+
+              <button
+                onClick={() => { setOpenOpinion(inc); setOVoter(names[0]); setOSuspect(suspects[0]); setOIntensity(60); }}
+                className="mt-2 w-full py-2.5 rounded-2xl glass hover:bg-white/15 transition text-sm font-bold flex items-center justify-center gap-2"
+              >
+                <ScaleIcon className="h-4 w-4 text-electric-orange" /> Cast Your Verdict
+              </button>
+            </div>
           </div>
         );
       })}
 
       {/* File modal */}
       {openFile && (
-        <Modal onClose={() => setOpenFile(false)} title="File a New Incident">
+        <Modal onClose={() => setOpenFile(false)} title="Spill the Tea ☕">
           <input
             value={title}
             onChange={e => setTitle(e.target.value)}
-            placeholder="Case title (optional)"
+            placeholder="Headline (optional) — e.g. The Maggi Massacre"
             className="w-full px-4 py-3 rounded-2xl glass outline-none text-sm border border-white/10 focus:border-neon-purple/60"
           />
           <textarea
             value={crime}
             onChange={e => setCrime(e.target.value)}
-            placeholder="What happened? Describe the alleged crime in dramatic detail…"
+            placeholder="What went down? Spill every detail. The room needs to know."
             rows={4}
             className="w-full px-4 py-3 rounded-2xl glass outline-none text-sm border border-white/10 focus:border-neon-purple/60 resize-none"
           />
-          <div>
-            <p className="text-[10px] uppercase tracking-widest text-muted-foreground font-bold mb-1.5">Filed by</p>
-            <div className="flex flex-wrap gap-2">
-              {names.map(n => (
-                <button
-                  key={n}
-                  onClick={() => setFiledBy(n)}
-                  className={`px-3 py-1.5 rounded-full text-xs font-bold transition ${filedBy === n ? "gradient-brand text-white glow-purple" : "glass hover:bg-white/15"}`}
-                >
-                  {n}
-                </button>
-              ))}
-            </div>
-          </div>
+          <ChipPicker label="Filed by" value={filedBy} options={names} onChange={setFiledBy} />
           <button
-            onClick={fileCase}
+            onClick={spillTea}
             disabled={!crime.trim()}
             className="w-full py-3 rounded-2xl gradient-brand text-white font-bold glow-purple disabled:opacity-50 hover:scale-[1.02] active:scale-[0.98] transition flex items-center justify-center gap-2"
           >
-            <Gavel className="h-4 w-4" /> Open the Case
+            <Flame className="h-4 w-4" /> Post to the Drama Board
           </button>
         </Modal>
       )}
 
-      {/* Perspective modal */}
-      {openCase && (
-        <Modal onClose={() => setOpenCase(null)} title="Your Perspective (Anonymous)">
+      {/* POV modal */}
+      {openPOV && (
+        <Modal onClose={() => setOpenPOV(null)} title="Drop Your POV 🎭">
           <p className="text-xs text-muted-foreground -mt-1">
-            On: <span className="text-foreground font-bold">{openCase.title}</span>
+            On: <span className="text-foreground font-bold">{openPOV.title}</span>
           </p>
+          <ChipPicker label="Submitting as" value={pJuror} options={names} onChange={setPJuror} hint="🤫 Stays anonymous until the room hits Reveal." />
           <div>
-            <p className="text-[10px] uppercase tracking-widest text-muted-foreground font-bold mb-1.5">Submitting as</p>
-            <div className="flex flex-wrap gap-2">
-              {names.map(n => (
+            <p className="text-[10px] uppercase tracking-widest text-muted-foreground font-bold mb-1.5">Your vibe</p>
+            <div className="flex gap-2">
+              {VIBES.map(v => (
                 <button
-                  key={n}
-                  onClick={() => setPJuror(n)}
-                  className={`px-3 py-1.5 rounded-full text-xs font-bold transition ${pJuror === n ? "gradient-brand text-white glow-purple" : "glass hover:bg-white/15"}`}
+                  key={v}
+                  onClick={() => setPVibe(v)}
+                  className={`h-10 w-10 rounded-2xl text-lg transition ${pVibe === v ? "gradient-brand glow-purple scale-110" : "glass hover:bg-white/15"}`}
                 >
-                  {n}
+                  {v}
                 </button>
               ))}
             </div>
-            <p className="text-[10px] text-muted-foreground mt-1.5">
-              🤫 Identity stays hidden until the room hits "Reveal jury".
-            </p>
           </div>
           <textarea
             value={pText}
@@ -250,11 +333,46 @@ export default function Tribunal() {
             className="w-full px-4 py-3 rounded-2xl glass outline-none text-sm border border-white/10 focus:border-neon-purple/60 resize-none"
           />
           <button
-            onClick={submitPerspective}
+            onClick={submitPOV}
             disabled={!pText.trim()}
             className="w-full py-3 rounded-2xl gradient-brand text-white font-bold glow-purple disabled:opacity-50 hover:scale-[1.02] active:scale-[0.98] transition flex items-center justify-center gap-2"
           >
-            <Sparkles className="h-4 w-4" /> Submit Testimony
+            <Sparkles className="h-4 w-4" /> Add to the Lore
+          </button>
+        </Modal>
+      )}
+
+      {/* Opinion modal */}
+      {openOpinion && (
+        <Modal onClose={() => setOpenOpinion(null)} title="Cast Your Verdict ⚖️">
+          <p className="text-xs text-muted-foreground -mt-1">
+            On: <span className="text-foreground font-bold">{openOpinion.title}</span>
+          </p>
+          <ChipPicker label="Voting as" value={oVoter} options={names} onChange={setOVoter} />
+          <ChipPicker label="Who caused this?" value={oSuspect} options={suspects} onChange={setOSuspect} />
+          <div>
+            <div className="flex items-center justify-between mb-1.5">
+              <p className="text-[10px] uppercase tracking-widest text-muted-foreground font-bold">How sure are you?</p>
+              <span className="text-xs font-black text-electric-orange">{oIntensity}%</span>
+            </div>
+            <input
+              type="range"
+              min={0}
+              max={100}
+              value={oIntensity}
+              onChange={e => setOIntensity(Number(e.target.value))}
+              className="w-full accent-[color:var(--neon-purple,#a855f7)]"
+            />
+            <div className="flex justify-between text-[10px] text-muted-foreground mt-1">
+              <span>🤷 Mid hunch</span>
+              <span>🔥 1000% sure</span>
+            </div>
+          </div>
+          <button
+            onClick={submitOpinion}
+            className="w-full py-3 rounded-2xl gradient-brand text-white font-bold glow-purple hover:scale-[1.02] active:scale-[0.98] transition flex items-center justify-center gap-2"
+          >
+            <ScaleIcon className="h-4 w-4" /> Lock In Verdict
           </button>
         </Modal>
       )}
@@ -262,12 +380,55 @@ export default function Tribunal() {
   );
 }
 
+function computeVerdict(opinions: OpinionVote[]) {
+  const total = opinions.length;
+  if (total === 0) return { total: 0, bars: [], topSuspect: "—", topPct: 0, avgIntensity: 0 };
+  const counts: Record<string, number> = {};
+  let intSum = 0;
+  for (const o of opinions) {
+    counts[o.suspect] = (counts[o.suspect] ?? 0) + 1;
+    intSum += o.intensity;
+  }
+  const bars = Object.entries(counts)
+    .map(([suspect, n]) => ({ suspect, pct: Math.round((n / total) * 100) }))
+    .sort((a, b) => b.pct - a.pct);
+  return {
+    total,
+    bars,
+    topSuspect: bars[0].suspect,
+    topPct: bars[0].pct,
+    avgIntensity: Math.round(intSum / total),
+  };
+}
+
+function ChipPicker({
+  label, value, options, onChange, hint,
+}: { label: string; value: string; options: string[]; onChange: (v: string) => void; hint?: string }) {
+  return (
+    <div>
+      <p className="text-[10px] uppercase tracking-widest text-muted-foreground font-bold mb-1.5">{label}</p>
+      <div className="flex flex-wrap gap-2">
+        {options.map(n => (
+          <button
+            key={n}
+            onClick={() => onChange(n)}
+            className={`px-3 py-1.5 rounded-full text-xs font-bold transition ${value === n ? "gradient-brand text-white glow-purple" : "glass hover:bg-white/15"}`}
+          >
+            {n}
+          </button>
+        ))}
+      </div>
+      {hint && <p className="text-[10px] text-muted-foreground mt-1.5">{hint}</p>}
+    </div>
+  );
+}
+
 function Modal({ children, onClose, title }: { children: React.ReactNode; onClose: () => void; title: string }) {
   return (
     <div className="fixed inset-0 z-[60] grid place-items-center p-4 bg-black/70 backdrop-blur-sm animate-pop-in">
-      <div className="w-full max-w-md rounded-3xl p-[2px] gradient-brand glow-purple">
-        <div className="rounded-[calc(1.5rem-2px)] bg-background/90 backdrop-blur-2xl p-5 space-y-3">
-          <div className="flex items-center justify-between">
+      <div className="w-full max-w-md rounded-3xl p-[2px] gradient-brand glow-purple max-h-[90vh] overflow-hidden">
+        <div className="rounded-[calc(1.5rem-2px)] bg-background/90 backdrop-blur-2xl p-5 space-y-3 max-h-[calc(90vh-4px)] overflow-y-auto">
+          <div className="flex items-center justify-between sticky top-0 bg-background/80 backdrop-blur-xl -mx-5 px-5 -mt-5 pt-5 pb-2">
             <h3 className="text-lg font-black text-gradient">{title}</h3>
             <button
               onClick={onClose}
