@@ -1,5 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import AuthScreen from "@/components/AuthScreen";
+import AliasOnboarding from "@/components/AliasOnboarding";
 import Dashboard from "@/components/Dashboard";
 import RoomSetup from "@/components/RoomSetup";
 import { useAuth, useRoom } from "@/lib/mock-store";
