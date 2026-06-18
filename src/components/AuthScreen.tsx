@@ -1,6 +1,7 @@
 import { useState } from "react";
+import { toast } from "sonner";
 import { Eye, EyeOff, Loader2, Mail, Lock, User as UserIcon, KeyRound, Check, Sparkles, Shield } from "lucide-react";
-import { setUser, enableDemoMode } from "@/lib/mock-store";
+import { setUser, enableDemoMode, registerAccount, validateCredentials } from "@/lib/mock-store";
 
 const GoogleIcon = () => (
   <svg viewBox="0 0 48 48" className="h-5 w-5">
