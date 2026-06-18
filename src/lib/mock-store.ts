@@ -213,6 +213,6 @@ export function enableDemoMode() {
     upcomingQuestion: "Are we allowing Rahul's loud gaming friend to crash on our floor this upcoming weekend?",
   };
   customPolls = [];
-  setUser({ name: "Demo Judge", email: "judge@suitesurvivor.app" });
+  setUser({ name: "Demo Judge", email: "judge@suitesurvivor.app", alias: "The_Judge_Supreme" });
   setRoom({ code: "SUITE-DEMO", roommates });
 }
