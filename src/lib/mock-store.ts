@@ -2,6 +2,34 @@ import { useEffect, useState } from "react";
 
 const KEY = "hostel-harmony-auth";
 const ROOM_KEY = "hostel-harmony-room";
+const ACCOUNTS_KEY = "hostel-harmony-accounts";
+
+type Account = { name: string; email: string; password: string };
+
+function loadAccounts(): Account[] {
+  if (typeof window === "undefined") return [];
+  try { return JSON.parse(localStorage.getItem(ACCOUNTS_KEY) ?? "[]"); } catch { return []; }
+}
+function saveAccounts(a: Account[]) {
+  if (typeof window !== "undefined") localStorage.setItem(ACCOUNTS_KEY, JSON.stringify(a));
+}
+
+export function registerAccount(name: string, email: string, password: string):
+  { ok: true } | { ok: false; error: string } {
+  const e = email.trim().toLowerCase();
+  if (!e || !password) return { ok: false, error: "Email and password are required." };
+  const accounts = loadAccounts();
+  if (accounts.some(a => a.email === e)) return { ok: false, error: "An account with this email already exists." };
+  accounts.push({ name: name.trim() || e.split("@")[0], email: e, password });
+  saveAccounts(accounts);
+  return { ok: true };
+}
+
+export function validateCredentials(email: string, password: string): Account | null {
+  const e = email.trim().toLowerCase();
+  const found = loadAccounts().find(a => a.email === e && a.password === password);
+  return found ?? null;
+}
 
 type User = { name: string; email: string };
 export type Room = { code: string; roommates: string[] };

@@ -1,6 +1,7 @@
 import { useState } from "react";
+import { toast } from "sonner";
 import { Eye, EyeOff, Loader2, Mail, Lock, User as UserIcon, KeyRound, Check, Sparkles, Shield } from "lucide-react";
-import { setUser, enableDemoMode } from "@/lib/mock-store";
+import { setUser, enableDemoMode, registerAccount, validateCredentials } from "@/lib/mock-store";
 
 const GoogleIcon = () => (
   <svg viewBox="0 0 48 48" className="h-5 w-5">
@@ -27,13 +28,56 @@ export default function AuthScreen() {
   const emailValid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
 
   const submit = (provider: "email" | "google" | "facebook") => {
+    if (provider === "email") {
+      if (!emailValid) {
+        toast.error("Please enter a valid email address.");
+        return;
+      }
+      if (!password) {
+        toast.error("Password is required.");
+        return;
+      }
+      setLoading("email");
+      setTimeout(() => {
+        if (mode === "signup") {
+          if (!name.trim()) {
+            setLoading(null);
+            toast.error("Please enter your full name.");
+            return;
+          }
+          if (password.length < 6) {
+            setLoading(null);
+            toast.error("Password must be at least 6 characters.");
+            return;
+          }
+          const res = registerAccount(name, email, password);
+          if (!res.ok) {
+            setLoading(null);
+            toast.error(res.error);
+            return;
+          }
+          toast.success("Account created. Welcome to SuiteSurvivor!");
+          setUser({ name: name.trim(), email: email.trim().toLowerCase() });
+        } else {
+          const acct = validateCredentials(email, password);
+          if (!acct) {
+            setLoading(null);
+            setPassword("");
+            toast.error("Invalid credentials or account does not exist.");
+            return;
+          }
+          setUser({ name: acct.name, email: acct.email });
+        }
+      }, 800);
+      return;
+    }
     setLoading(provider);
     setTimeout(() => {
       setUser({
-        name: provider === "email" ? (name || email.split("@")[0] || "Roomie") : provider === "google" ? "Google Roomie" : "FB Roomie",
-        email: provider === "email" ? email || "you@hostel.app" : `${provider}@hostel.app`,
+        name: provider === "google" ? "Google Roomie" : "FB Roomie",
+        email: `${provider}@hostel.app`,
       });
-    }, 1500);
+    }, 1200);
   };
 
   return (
