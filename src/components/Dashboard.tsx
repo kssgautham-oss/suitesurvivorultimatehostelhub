@@ -18,7 +18,7 @@ export default function Dashboard() {
       <header className="px-5 pt-6 pb-4 flex items-center justify-between">
         <div>
           <p className="text-xs text-muted-foreground">Welcome back,</p>
-          <h2 className="text-xl font-bold text-gradient truncate max-w-[200px]">{user?.name ?? "Roomie"}</h2>
+          <h2 className="text-xl font-bold text-gradient truncate max-w-[200px]">{user?.alias ?? "Anonymous"}</h2>
         </div>
         <button
           onClick={() => setUser(null)}

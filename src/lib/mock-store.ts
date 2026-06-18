@@ -31,7 +31,22 @@ export function validateCredentials(email: string, password: string): Account | 
   return found ?? null;
 }
 
-type User = { name: string; email: string };
+type User = { name: string; email: string; alias?: string };
+
+const ALIAS_ADJECTIVES = ["Sneaky", "Chaotic", "Midnight", "Salty", "Caffeinated", "Petty", "Feral", "Lowkey", "Spicy", "Drowsy"];
+const ALIAS_NOUNS = ["Survivor", "Goblin", "Menace", "Snackster", "Gremlin", "Diva", "Phantom", "TeaSpiller", "Pajama", "Maggi"];
+export function generateAlias(): string {
+  const a = ALIAS_ADJECTIVES[Math.floor(Math.random() * ALIAS_ADJECTIVES.length)];
+  const n = ALIAS_NOUNS[Math.floor(Math.random() * ALIAS_NOUNS.length)];
+  const num = Math.floor(100 + Math.random() * 900);
+  return `${a}_${n}_${num}`;
+}
+export function setAlias(alias: string) {
+  if (!current) return;
+  current = { ...current, alias: alias.trim() };
+  if (typeof window !== "undefined") localStorage.setItem(KEY, JSON.stringify(current));
+  listeners.forEach(fn => fn());
+}
 export type Room = { code: string; roommates: string[] };
 export type SeedExpense = { id: string; label: string; amount: number; paidBy: string };
 export type SeedVibe = {
@@ -198,6 +213,6 @@ export function enableDemoMode() {
     upcomingQuestion: "Are we allowing Rahul's loud gaming friend to crash on our floor this upcoming weekend?",
   };
   customPolls = [];
-  setUser({ name: "Demo Judge", email: "judge@suitesurvivor.app" });
+  setUser({ name: "Demo Judge", email: "judge@suitesurvivor.app", alias: "The_Judge_Supreme" });
   setRoom({ code: "SUITE-DEMO", roommates });
 }
