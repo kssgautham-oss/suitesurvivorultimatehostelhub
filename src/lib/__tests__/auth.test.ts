@@ -13,12 +13,11 @@ class MemoryStorage {
 }
 
 beforeEach(() => {
-  // @ts-expect-error inject minimal window + localStorage for the module under test
-  globalThis.window = globalThis.window ?? {};
-  // @ts-expect-error
-  globalThis.localStorage = new MemoryStorage();
-  // @ts-expect-error
-  globalThis.window.localStorage = globalThis.localStorage;
+  const g = globalThis as unknown as { window?: Record<string, unknown>; localStorage?: unknown };
+  const storage = new MemoryStorage();
+  g.window = g.window ?? {};
+  g.window.localStorage = storage;
+  g.localStorage = storage;
 });
 
 describe("auth", () => {
