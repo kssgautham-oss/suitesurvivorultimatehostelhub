@@ -21,6 +21,7 @@ function Index() {
   const user = useAuth();
   const room = useRoom();
   if (!user) return <AuthScreen />;
+  if (!user.alias) return <AliasOnboarding />;
   if (!room) return <RoomSetup />;
   return <Dashboard />;
 }
