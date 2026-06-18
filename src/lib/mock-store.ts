@@ -60,10 +60,29 @@ let seedExpenses: SeedExpense[] | null = null;
 let seedVibe: SeedVibe | null = null;
 let customPolls: CustomPoll[] = [];
 
+const DEMO_EMAIL = "judge@suitesurvivor.app";
+
+function isValidSession(u: unknown): u is User {
+  if (!u || typeof u !== "object") return false;
+  const candidate = u as { name?: unknown; email?: unknown };
+  if (typeof candidate.name !== "string" || typeof candidate.email !== "string") return false;
+  if (!candidate.name.trim() || !candidate.email.trim()) return false;
+  const email = candidate.email.toLowerCase();
+  if (email === DEMO_EMAIL) return true;
+  // Social mock providers issue these emails — accept as authenticated.
+  if (email === "google@hostel.app" || email === "facebook@hostel.app") return true;
+  // Otherwise, the session must correspond to a registered account.
+  return loadAccounts().some(a => a.email === email);
+}
+
 if (typeof window !== "undefined") {
   try {
     const raw = localStorage.getItem(KEY);
-    if (raw) current = JSON.parse(raw);
+    if (raw) {
+      const parsed = JSON.parse(raw);
+      if (isValidSession(parsed)) current = parsed;
+      else localStorage.removeItem(KEY);
+    }
     const rawRoom = localStorage.getItem(ROOM_KEY);
     if (rawRoom) currentRoom = JSON.parse(rawRoom);
   } catch {}
