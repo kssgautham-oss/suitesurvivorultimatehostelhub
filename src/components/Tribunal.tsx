@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Gavel, Plus, Eye, EyeOff, Sparkles, X, Flame, Coffee, Scale as ScaleIcon } from "lucide-react";
 import { toast } from "sonner";
-import { useRoom } from "@/lib/mock-store";
+import { useRoom, useAuth } from "@/lib/mock-store";
 
 type Perspective = {
   id: string;
@@ -10,7 +10,7 @@ type Perspective = {
   vibe: "🫣" | "😤" | "💀" | "🧘" | "🔥";
 };
 
-type OpinionVote = { voter: string; suspect: string; intensity: number }; // intensity 0-100
+type OpinionVote = { voter: string; suspect: string; intensity: number };
 
 type QuestStatus = "Open Dispute" | "Jury Review" | "Resolved";
 
@@ -42,6 +42,8 @@ const VIBES: Perspective["vibe"][] = ["🫣", "😤", "💀", "🧘", "🔥"];
 
 export default function Tribunal() {
   const room = useRoom();
+  const user = useAuth();
+  const currentAlias = user?.alias ?? "You";
   const names = room?.roommates ?? ["A", "B", "C"];
   const suspects = [...names, "The Ghost 👻", "Nobody, chill"];
 
@@ -54,15 +56,12 @@ export default function Tribunal() {
   // file form
   const [title, setTitle] = useState("");
   const [crime, setCrime] = useState("");
-  const [filedBy, setFiledBy] = useState(names[0]);
 
   // pov form
-  const [pJuror, setPJuror] = useState(names[0]);
   const [pText, setPText] = useState("");
   const [pVibe, setPVibe] = useState<Perspective["vibe"]>("🫣");
 
   // opinion form
-  const [oVoter, setOVoter] = useState(names[0]);
   const [oSuspect, setOSuspect] = useState(suspects[0]);
   const [oIntensity, setOIntensity] = useState(60);
 
@@ -72,30 +71,36 @@ export default function Tribunal() {
       id: Date.now().toString(36),
       title: title.trim() || SEED_TITLES[Math.floor(Math.random() * SEED_TITLES.length)],
       crime: crime.trim(),
-      filedBy,
+      filedBy: currentAlias,
       createdAt: Date.now(),
       perspectives: [],
       opinions: [],
       status: "Open Dispute",
     };
     setIncidents([inc, ...incidents]);
-    setTitle(""); setCrime(""); setFiledBy(names[0]);
+    setTitle(""); setCrime("");
     setOpenFile(false);
     toast.success("Tea spilled. The room is watching. ☕🔥");
   };
 
   const submitPOV = () => {
     if (!openPOV || !pText.trim()) return;
+    const alreadyPOV = openPOV.perspectives.some(p => p.juror === currentAlias);
+    if (alreadyPOV) {
+      toast.error("You already shared your POV on this case.");
+      setOpenPOV(null);
+      return;
+    }
     const updated: Incident = {
       ...openPOV,
       status: openPOV.status === "Resolved" ? "Resolved" : "Jury Review",
       perspectives: [
         ...openPOV.perspectives,
-        { id: Date.now().toString(36), juror: pJuror, text: pText.trim(), vibe: pVibe },
+        { id: Date.now().toString(36), juror: currentAlias, text: pText.trim(), vibe: pVibe },
       ],
     };
     setIncidents(incidents.map(i => (i.id === updated.id ? updated : i)));
-    setOpenPOV(updated);
+    setOpenPOV(null);
     setPText("");
     toast.success("POV added to the lore. 🎭");
   };
@@ -110,21 +115,29 @@ export default function Tribunal() {
 
   const submitOpinion = () => {
     if (!openOpinion) return;
+    const alreadyVoted = openOpinion.opinions.some(o => o.voter === currentAlias);
+    if (alreadyVoted) {
+      toast.error("You already cast your verdict on this case.");
+      setOpenOpinion(null);
+      return;
+    }
     const updated: Incident = {
       ...openOpinion,
-      // one vote per voter — replace previous
       opinions: [
-        ...openOpinion.opinions.filter(o => o.voter !== oVoter),
-        { voter: oVoter, suspect: oSuspect, intensity: oIntensity },
+        ...openOpinion.opinions,
+        { voter: currentAlias, suspect: oSuspect, intensity: oIntensity },
       ],
     };
     setIncidents(incidents.map(i => (i.id === updated.id ? updated : i)));
-    setOpenOpinion(updated);
+    setOpenOpinion(null);
     toast.success("Vote locked in. The room has spoken. ⚖️");
   };
 
   const toggleReveal = (id: string) =>
     setReveal(r => ({ ...r, [id]: !r[id] }));
+
+  const hasUserPOV = (inc: Incident) => inc.perspectives.some(p => p.juror === currentAlias);
+  const hasUserOpinion = (inc: Incident) => inc.opinions.some(o => o.voter === currentAlias);
 
   return (
     <div className="space-y-5 animate-pop-in">
@@ -164,6 +177,8 @@ export default function Tribunal() {
       {incidents.map(inc => {
         const revealed = !!reveal[inc.id];
         const verdict = computeVerdict(inc.opinions);
+        const userHasPOV = hasUserPOV(inc);
+        const userHasOpinion = hasUserOpinion(inc);
         return (
           <div key={inc.id} className="glass-strong rounded-3xl p-5 space-y-4">
             {/* Title row */}
@@ -240,10 +255,11 @@ export default function Tribunal() {
               )}
 
               <button
-                onClick={() => { setOpenPOV(inc); setPJuror(names[0]); setPText(""); setPVibe("🫣"); }}
-                className="mt-2 w-full py-2.5 rounded-2xl glass hover:bg-white/15 transition text-sm font-bold flex items-center justify-center gap-2"
+                onClick={() => { setOpenPOV(inc); setPText(""); setPVibe("🫣"); }}
+                disabled={userHasPOV}
+                className={`mt-2 w-full py-2.5 rounded-2xl transition text-sm font-bold flex items-center justify-center gap-2 ${userHasPOV ? "glass opacity-50 cursor-not-allowed" : "glass hover:bg-white/15"}`}
               >
-                <Plus className="h-4 w-4 text-neon-pink" /> Drop Your POV
+                <Plus className="h-4 w-4 text-neon-pink" /> {userHasPOV ? "POV Already Shared" : "Drop Your POV"}
               </button>
             </div>
 
@@ -287,10 +303,11 @@ export default function Tribunal() {
 
               <div className="mt-2 grid grid-cols-2 gap-2">
                 <button
-                  onClick={() => { setOpenOpinion(inc); setOVoter(names[0]); setOSuspect(suspects[0]); setOIntensity(60); }}
-                  className="py-2.5 rounded-2xl glass hover:bg-white/15 transition text-sm font-bold flex items-center justify-center gap-2"
+                  onClick={() => { setOpenOpinion(inc); setOSuspect(suspects[0]); setOIntensity(60); }}
+                  disabled={userHasOpinion}
+                  className={`py-2.5 rounded-2xl transition text-sm font-bold flex items-center justify-center gap-2 ${userHasOpinion ? "glass opacity-50 cursor-not-allowed" : "glass hover:bg-white/15"}`}
                 >
-                  <ScaleIcon className="h-4 w-4 text-electric-orange" /> Verdict
+                  <ScaleIcon className="h-4 w-4 text-electric-orange" /> {userHasOpinion ? "Verdict Locked" : "Verdict"}
                 </button>
                 <button
                   onClick={() => toggleResolved(inc)}
@@ -320,7 +337,7 @@ export default function Tribunal() {
             rows={4}
             className="w-full px-4 py-3 rounded-2xl glass outline-none text-sm border border-white/10 focus:border-neon-purple/60 resize-none"
           />
-          <ChipPicker label="Filed by" value={filedBy} options={names} onChange={setFiledBy} />
+          <p className="text-[10px] text-muted-foreground">Filing as: <span className="font-bold text-foreground">{currentAlias}</span></p>
           <button
             onClick={spillTea}
             disabled={!crime.trim()}
@@ -337,7 +354,7 @@ export default function Tribunal() {
           <p className="text-xs text-muted-foreground -mt-1">
             On: <span className="text-foreground font-bold">{openPOV.title}</span>
           </p>
-          <ChipPicker label="Submitting as" value={pJuror} options={names} onChange={setPJuror} hint="🤫 Stays anonymous until the room hits Reveal." />
+          <p className="text-[10px] text-muted-foreground">Submitting as: <span className="font-bold text-foreground">{currentAlias}</span> · stays anonymous until Reveal.</p>
           <div>
             <p className="text-[10px] uppercase tracking-widest text-muted-foreground font-bold mb-1.5">Your vibe</p>
             <div className="flex gap-2">
@@ -375,7 +392,7 @@ export default function Tribunal() {
           <p className="text-xs text-muted-foreground -mt-1">
             On: <span className="text-foreground font-bold">{openOpinion.title}</span>
           </p>
-          <ChipPicker label="Voting as" value={oVoter} options={names} onChange={setOVoter} />
+          <p className="text-[10px] text-muted-foreground">Voting as: <span className="font-bold text-foreground">{currentAlias}</span></p>
           <ChipPicker label="Who caused this?" value={oSuspect} options={suspects} onChange={setOSuspect} />
           <div>
             <div className="flex items-center justify-between mb-1.5">
@@ -429,8 +446,8 @@ function computeVerdict(opinions: OpinionVote[]) {
 }
 
 function ChipPicker({
-  label, value, options, onChange, hint,
-}: { label: string; value: string; options: string[]; onChange: (v: string) => void; hint?: string }) {
+  label, value, options, onChange,
+}: { label: string; value: string; options: string[]; onChange: (v: string) => void }) {
   return (
     <div>
       <p className="text-[10px] uppercase tracking-widest text-muted-foreground font-bold mb-1.5">{label}</p>
@@ -445,7 +462,6 @@ function ChipPicker({
           </button>
         ))}
       </div>
-      {hint && <p className="text-[10px] text-muted-foreground mt-1.5">{hint}</p>}
     </div>
   );
 }

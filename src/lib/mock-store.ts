@@ -65,6 +65,7 @@ export type CustomPoll = {
   question: string;
   options: string[];
   tally: Record<string, number>;
+  voters: Record<string, string[]>; // option -> array of user aliases who voted for it
   source?: "user" | "onboarding";
 };
 
@@ -171,23 +172,39 @@ export function consumeSeedVibe() {
 }
 
 export function getCustomPolls() { return customPolls; }
-export function addCustomPoll(p: Omit<CustomPoll, "id" | "tally">) {
+export function addCustomPoll(p: Omit<CustomPoll, "id" | "tally" | "voters">) {
   const poll: CustomPoll = {
     id: Date.now().toString() + Math.random().toString(36).slice(2, 6),
     question: p.question,
     options: p.options,
     tally: Object.fromEntries(p.options.map(o => [o, 0])),
+    voters: Object.fromEntries(p.options.map(o => [o, [] as string[]])),
     source: p.source ?? "user",
   };
   customPolls = [poll, ...customPolls];
   pollListeners.forEach(fn => fn());
   return poll;
 }
-export function voteCustomPoll(id: string, option: string) {
-  customPolls = customPolls.map(p =>
-    p.id === id ? { ...p, tally: { ...p.tally, [option]: (p.tally[option] ?? 0) + 1 } } : p
-  );
+export function voteCustomPoll(id: string, option: string, voterAlias: string) {
+  customPolls = customPolls.map(p => {
+    if (p.id !== id) return p;
+    const alreadyVoted = p.options.some(opt => p.voters[opt]?.includes(voterAlias));
+    if (alreadyVoted) return p;
+    return {
+      ...p,
+      tally: { ...p.tally, [option]: (p.tally[option] ?? 0) + 1 },
+      voters: {
+        ...p.voters,
+        [option]: [...(p.voters[option] ?? []), voterAlias],
+      },
+    };
+  });
   pollListeners.forEach(fn => fn());
+}
+export function hasUserVotedCustomPoll(id: string, alias: string): boolean {
+  const p = customPolls.find(cp => cp.id === id);
+  if (!p) return false;
+  return p.options.some(opt => p.voters[opt]?.includes(alias));
 }
 export function useCustomPolls() {
   const [polls, setPolls] = useState<CustomPoll[]>(customPolls);

@@ -1,7 +1,7 @@
 import { useMemo, useState } from "react";
-import { RotateCw, Flame, Link2, CheckCircle2, Clock, Plus, X, Sparkles, Wand2 } from "lucide-react";
+import { RotateCw, Flame, Link2, CircleCheck as CheckCircle2, Clock, Plus, X, Sparkles, Wand as Wand2 } from "lucide-react";
 import { toast } from "sonner";
-import { useRoom, consumeSeedVibe, useCustomPolls, addCustomPoll, voteCustomPoll, type SeedVibe } from "@/lib/mock-store";
+import { useRoom, useAuth, consumeSeedVibe, useCustomPolls, addCustomPoll, voteCustomPoll, hasUserVotedCustomPoll, type SeedVibe } from "@/lib/mock-store";
 
 const QUESTIONS = [
   "Who left the empty milk packet inside the induction kettle and burnt the base again?",
@@ -14,6 +14,8 @@ const QUESTIONS = [
 
 export default function VibeCheck() {
   const room = useRoom();
+  const user = useAuth();
+  const currentAlias = user?.alias ?? "You";
   const ROOMMATES = room?.roommates ?? ["A", "B", "C"];
 
   const seed = useMemo<SeedVibe | null>(() => consumeSeedVibe(), []);
@@ -136,6 +138,7 @@ export default function VibeCheck() {
       {/* Live custom polls */}
       {polls.map(p => {
         const total = Object.values(p.tally).reduce((a, b) => a + b, 0);
+        const userLocked = hasUserVotedCustomPoll(p.id, currentAlias);
         return (
           <div key={p.id} className="glass-strong rounded-3xl p-5 animate-pop-in">
             <div className="flex items-center gap-2 text-xs uppercase tracking-widest text-neon-purple font-bold">
@@ -149,8 +152,9 @@ export default function VibeCheck() {
                 return (
                   <button
                     key={opt}
-                    onClick={() => voteCustomPoll(p.id, opt)}
-                    className="w-full relative overflow-hidden glass rounded-2xl p-3 text-left hover:bg-white/15 transition"
+                    onClick={() => voteCustomPoll(p.id, opt, currentAlias)}
+                    disabled={userLocked}
+                    className={`w-full relative overflow-hidden glass rounded-2xl p-3 text-left transition ${userLocked ? "opacity-50 cursor-not-allowed" : "hover:bg-white/15"}`}
                   >
                     <div className="absolute inset-y-0 left-0 gradient-brand opacity-30 transition-all duration-500" style={{ width: `${pct}%` }} />
                     <div className="relative flex items-center justify-between">
@@ -161,6 +165,9 @@ export default function VibeCheck() {
                 );
               })}
             </div>
+            {userLocked && (
+              <p className="mt-2 text-[10px] text-muted-foreground text-center">You have already voted on this poll.</p>
+            )}
           </div>
         );
       })}
@@ -172,22 +179,53 @@ export default function VibeCheck() {
         <h3 className="mt-2 text-2xl font-bold leading-snug">{question}</h3>
 
         <div className="mt-5 space-y-3">
-          {ROOMMATES.map(voter => (
-            <div key={voter} className="glass rounded-2xl p-3">
+          {/* Only the current user can vote; show their block */}
+          {(() => {
+            const myVote = votes[currentAlias] ?? null;
+            const hasVoted = myVote !== null;
+            return (
+              <div key={currentAlias} className="glass rounded-2xl p-3">
+                <p className="text-xs text-muted-foreground mb-2">
+                  <span className="font-semibold text-foreground">{currentAlias}</span> votes for…
+                </p>
+                <div className={`grid gap-2`} style={{ gridTemplateColumns: `repeat(${ROOMMATES.length}, minmax(0, 1fr))` }}>
+                  {ROOMMATES.map(target => {
+                    const picked = myVote === target;
+                    return (
+                      <button
+                        key={target}
+                        onClick={() => { if (!hasVoted) { setVotes(v => ({ ...v, [currentAlias]: target })); setCustomPct(null); } }}
+                        disabled={hasVoted}
+                        className={`py-2 rounded-xl text-xs font-semibold transition ${picked ? "gradient-brand text-white glow-purple" : hasVoted ? "glass opacity-50 cursor-not-allowed" : "glass hover:bg-white/15"}`}
+                      >
+                        {target}
+                      </button>
+                    );
+                  })}
+                </div>
+                {hasVoted && (
+                  <p className="mt-2 text-[10px] text-muted-foreground text-center">You have already voted on this poll.</p>
+                )}
+              </div>
+            );
+          })()}
+
+          {/* Show other roommates' votes as read-only (only if they have voted) */}
+          {ROOMMATES.filter(r => r !== currentAlias && votes[r]).map(voter => (
+            <div key={voter} className="glass rounded-2xl p-3 opacity-70">
               <p className="text-xs text-muted-foreground mb-2">
-                <span className="font-semibold text-foreground">{voter}</span> votes for…
+                <span className="font-semibold text-foreground">{voter}</span> voted for…
               </p>
               <div className={`grid gap-2`} style={{ gridTemplateColumns: `repeat(${ROOMMATES.length}, minmax(0, 1fr))` }}>
                 {ROOMMATES.map(target => {
                   const picked = votes[voter] === target;
                   return (
-                    <button
+                    <div
                       key={target}
-                      onClick={() => { setVotes(v => ({ ...v, [voter]: target })); setCustomPct(null); }}
-                      className={`py-2 rounded-xl text-xs font-semibold transition ${picked ? "gradient-brand text-white glow-purple" : "glass hover:bg-white/15"}`}
+                      className={`py-2 rounded-xl text-xs font-semibold text-center ${picked ? "gradient-brand text-white" : "glass"}`}
                     >
                       {target}
-                    </button>
+                    </div>
                   );
                 })}
               </div>
