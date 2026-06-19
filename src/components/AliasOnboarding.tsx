@@ -1,10 +1,11 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { toast } from "sonner";
 import { Sparkles, Shuffle, Ghost } from "lucide-react";
 import { generateAlias, setAlias } from "@/lib/mock-store";
 
 export default function AliasOnboarding() {
-  const [alias, setLocalAlias] = useState(generateAlias);
+  const [alias, setLocalAlias] = useState("");
+  useEffect(() => { setLocalAlias(generateAlias()); }, []);
 
   const reroll = () => setLocalAlias(generateAlias());
 
