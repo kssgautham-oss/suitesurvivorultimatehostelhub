@@ -1,5 +1,7 @@
 {
-  "rewrites": [
-    {"source": "/(.*)", "destination": "/index.html"}
-  ]
+  "name": "suitesurvivorultimatehostelhub",
+  "pages_build_output_dir": "dist",
+  "build": {
+    "command": "npm run build"
+  }
 }
