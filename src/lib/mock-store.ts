@@ -202,9 +202,9 @@ export function useCustomPolls() {
 export function enableDemoMode() {
   const roommates = ["Rahul", "Karthik", "You"];
   seedExpenses = [
-    { id: "d1", label: "Rent Split", amount: 3000, paidBy: "You" },
-    { id: "d2", label: "Wifi Bill", amount: 600, paidBy: "Rahul" },
-    { id: "d3", label: "Emergency Midnight Maggi Supplies", amount: 450, paidBy: "Karthik" },
+    { id: "d1", label: "Rent Split", amount: 3000, paidBy: "You", category: "Rent" },
+    { id: "d2", label: "Wifi Bill", amount: 600, paidBy: "Rahul", category: "Wifi" },
+    { id: "d3", label: "Emergency Midnight Maggi Supplies", amount: 450, paidBy: "Karthik", category: "Snacks" },
   ];
   seedVibe = {
     question: "Who left the empty milk packet inside the induction kettle and burnt the base again?",
