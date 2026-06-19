@@ -1,8 +1,12 @@
 import { useMemo, useState } from "react";
 import { Plus, Trash2, Wallet, Receipt } from "lucide-react";
-import { useRoom, consumeSeedExpenses, type SeedExpense } from "@/lib/mock-store";
+import { useRoom, consumeSeedExpenses, type SeedExpense, type ExpenseCategory, EXPENSE_CATEGORIES } from "@/lib/mock-store";
 
 type Expense = SeedExpense;
+
+const CATEGORY_EMOJI: Record<ExpenseCategory, string> = {
+  Rent: "🏠", Food: "🍱", Wifi: "📶", Utilities: "💡", Snacks: "🍪", Other: "🧾",
+};
 
 export default function SplitExpense() {
   const room = useRoom();
@@ -11,11 +15,12 @@ export default function SplitExpense() {
   const [label, setLabel] = useState("");
   const [amount, setAmount] = useState("");
   const [paidBy, setPaidBy] = useState(ROOMMATES[0]);
+  const [category, setCategory] = useState<ExpenseCategory>("Food");
 
   const add = () => {
     const amt = parseFloat(amount);
     if (!label.trim() || !amt || amt <= 0) return;
-    setItems(i => [{ id: Date.now().toString(), label: label.trim(), amount: amt, paidBy }, ...i]);
+    setItems(i => [{ id: Date.now().toString(), label: label.trim(), amount: amt, paidBy, category }, ...i]);
     setLabel(""); setAmount("");
   };
 
