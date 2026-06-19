@@ -103,6 +103,20 @@ export default function SplitExpense() {
             {ROOMMATES.map(r => <option key={r} value={r} className="bg-background">{r} paid</option>)}
           </select>
         </div>
+        <div>
+          <p className="text-[10px] uppercase tracking-widest text-muted-foreground font-bold mb-1.5">Category</p>
+          <div className="flex flex-wrap gap-1.5">
+            {EXPENSE_CATEGORIES.map(c => (
+              <button
+                key={c}
+                onClick={() => setCategory(c)}
+                className={`px-3 py-1.5 rounded-full text-xs font-bold transition ${category === c ? "gradient-brand text-white glow-purple" : "glass hover:bg-white/15"}`}
+              >
+                {CATEGORY_EMOJI[c]} {c}
+              </button>
+            ))}
+          </div>
+        </div>
         <button onClick={add} className="w-full py-3 rounded-2xl gradient-brand glow-purple text-white font-bold flex items-center justify-center gap-2 hover:scale-[1.02] active:scale-[0.98] transition">
           <Plus className="h-4 w-4" /> Add to split
         </button>
@@ -110,9 +124,16 @@ export default function SplitExpense() {
 
       <div className="space-y-2">
         {items.map(e => (
-          <div key={e.id} className="glass rounded-2xl p-3 flex items-center justify-between">
-            <div className="min-w-0">
-              <p className="font-semibold truncate">{e.label}</p>
+          <div key={e.id} className="glass rounded-2xl p-3 flex items-center justify-between gap-2">
+            <div className="min-w-0 flex-1">
+              <div className="flex items-center gap-2 mb-0.5">
+                {e.category && (
+                  <span className="text-[10px] px-2 py-0.5 rounded-full glass-strong text-neon-pink font-bold whitespace-nowrap">
+                    {CATEGORY_EMOJI[e.category]} {e.category}
+                  </span>
+                )}
+                <p className="font-semibold truncate">{e.label}</p>
+              </div>
               <p className="text-xs text-muted-foreground">Paid by {e.paidBy} · ₹{(e.amount/ROOMMATES.length).toFixed(0)} each</p>
             </div>
             <div className="flex items-center gap-2 shrink-0">
