@@ -12,6 +12,8 @@ type Perspective = {
 
 type OpinionVote = { voter: string; suspect: string; intensity: number }; // intensity 0-100
 
+type QuestStatus = "Open Dispute" | "Jury Review" | "Resolved";
+
 type Incident = {
   id: string;
   title: string;
@@ -20,6 +22,13 @@ type Incident = {
   createdAt: number;
   perspectives: Perspective[];
   opinions: OpinionVote[];
+  status: QuestStatus;
+};
+
+const STATUS_STYLES: Record<QuestStatus, string> = {
+  "Open Dispute": "bg-electric-orange/20 text-electric-orange border-electric-orange/40",
+  "Jury Review": "bg-neon-purple/20 text-neon-pink border-neon-purple/40",
+  "Resolved": "bg-success/20 text-success border-success/40",
 };
 
 const SEED_TITLES = [
@@ -67,6 +76,7 @@ export default function Tribunal() {
       createdAt: Date.now(),
       perspectives: [],
       opinions: [],
+      status: "Open Dispute",
     };
     setIncidents([inc, ...incidents]);
     setTitle(""); setCrime(""); setFiledBy(names[0]);
@@ -78,6 +88,7 @@ export default function Tribunal() {
     if (!openPOV || !pText.trim()) return;
     const updated: Incident = {
       ...openPOV,
+      status: openPOV.status === "Resolved" ? "Resolved" : "Jury Review",
       perspectives: [
         ...openPOV.perspectives,
         { id: Date.now().toString(36), juror: pJuror, text: pText.trim(), vibe: pVibe },
@@ -87,6 +98,14 @@ export default function Tribunal() {
     setOpenPOV(updated);
     setPText("");
     toast.success("POV added to the lore. 🎭");
+  };
+
+  const toggleResolved = (inc: Incident) => {
+    const next: QuestStatus = inc.status === "Resolved"
+      ? (inc.perspectives.length > 0 ? "Jury Review" : "Open Dispute")
+      : "Resolved";
+    setIncidents(incidents.map(i => (i.id === inc.id ? { ...i, status: next } : i)));
+    toast.success(next === "Resolved" ? "Case closed. Peace restored. 🕊️" : "Case reopened. Drama is back. 🔥");
   };
 
   const submitOpinion = () => {
@@ -156,11 +175,11 @@ export default function Tribunal() {
                 <h4 className="text-lg font-black text-gradient mt-1 truncate">{inc.title}</h4>
               </div>
               <div className="flex flex-col items-end gap-1">
-                <span className="text-[10px] px-2 py-1 rounded-full glass text-neon-pink font-bold whitespace-nowrap">
-                  {inc.perspectives.length} POV
+                <span className={`text-[10px] px-2 py-1 rounded-full font-black uppercase tracking-wider border whitespace-nowrap ${STATUS_STYLES[inc.status]}`}>
+                  {inc.status}
                 </span>
-                <span className="text-[10px] px-2 py-1 rounded-full glass text-electric-orange font-bold whitespace-nowrap">
-                  {inc.opinions.length} votes
+                <span className="text-[10px] px-2 py-1 rounded-full glass text-neon-pink font-bold whitespace-nowrap">
+                  {inc.perspectives.length} POV · {inc.opinions.length} votes
                 </span>
               </div>
             </div>
