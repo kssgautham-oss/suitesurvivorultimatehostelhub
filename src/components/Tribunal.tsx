@@ -285,12 +285,20 @@ export default function Tribunal() {
                 </div>
               )}
 
-              <button
-                onClick={() => { setOpenOpinion(inc); setOVoter(names[0]); setOSuspect(suspects[0]); setOIntensity(60); }}
-                className="mt-2 w-full py-2.5 rounded-2xl glass hover:bg-white/15 transition text-sm font-bold flex items-center justify-center gap-2"
-              >
-                <ScaleIcon className="h-4 w-4 text-electric-orange" /> Cast Your Verdict
-              </button>
+              <div className="mt-2 grid grid-cols-2 gap-2">
+                <button
+                  onClick={() => { setOpenOpinion(inc); setOVoter(names[0]); setOSuspect(suspects[0]); setOIntensity(60); }}
+                  className="py-2.5 rounded-2xl glass hover:bg-white/15 transition text-sm font-bold flex items-center justify-center gap-2"
+                >
+                  <ScaleIcon className="h-4 w-4 text-electric-orange" /> Verdict
+                </button>
+                <button
+                  onClick={() => toggleResolved(inc)}
+                  className={`py-2.5 rounded-2xl transition text-sm font-bold flex items-center justify-center gap-2 ${inc.status === "Resolved" ? "glass hover:bg-white/15" : "gradient-brand text-white glow-purple hover:scale-[1.02] active:scale-[0.98]"}`}
+                >
+                  {inc.status === "Resolved" ? "↩ Reopen" : "✓ Resolve"}
+                </button>
+              </div>
             </div>
           </div>
         );
