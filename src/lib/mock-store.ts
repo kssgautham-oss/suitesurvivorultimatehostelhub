@@ -48,7 +48,9 @@ export function setAlias(alias: string) {
   listeners.forEach(fn => fn());
 }
 export type Room = { code: string; roommates: string[] };
-export type SeedExpense = { id: string; label: string; amount: number; paidBy: string };
+export type ExpenseCategory = "Rent" | "Food" | "Wifi" | "Utilities" | "Snacks" | "Other";
+export const EXPENSE_CATEGORIES: ExpenseCategory[] = ["Rent", "Food", "Wifi", "Utilities", "Snacks", "Other"];
+export type SeedExpense = { id: string; label: string; amount: number; paidBy: string; category?: ExpenseCategory };
 export type SeedVibe = {
   question: string;
   votes: Record<string, string>;
