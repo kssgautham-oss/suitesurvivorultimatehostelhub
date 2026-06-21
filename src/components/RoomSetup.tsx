@@ -1,6 +1,8 @@
 import { useState } from "react";
-import { Plus, LogIn, ArrowLeft, Sparkles, Copy, Check, KeyRound, Users, Moon, Sun, Snowflake, Cookie } from "lucide-react";
+import { Plus, LogIn, ArrowLeft, Sparkles, Copy, Check, KeyRound, Users, Moon, Sun, Snowflake, Cookie, Loader as Loader2 } from "lucide-react";
 import { setRoom, generateRoomCode, addCustomPoll, type Room } from "@/lib/mock-store";
+import { findRoomByCode, createRoom } from "@/lib/room-api";
+import { toast } from "sonner";
 
 type Mode = "choose" | "create" | "join" | "survey" | "success";
 type Size = 2 | 3;
@@ -14,22 +16,47 @@ export default function RoomSetup() {
   const [code, setCode] = useState("");
   const [pending, setPending] = useState<Room | null>(null);
   const [copied, setCopied] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [roomNotFound, setRoomNotFound] = useState(false);
 
   // Survey state (join flow)
   const [sleep, setSleep] = useState<"owl" | "bird" | null>(null);
   const [ac, setAc] = useState<"arctic" | "chill" | "warm" | null>(null);
   const [snack, setSnack] = useState<"share" | "ask" | "mine" | null>(null);
 
-  const create = () => {
+  const create = async () => {
     if (!me.trim() || !r2.trim() || (size === 3 && !r3.trim())) return;
-    const mates = size === 3 ? [me.trim(), r2.trim(), r3.trim()] : [me.trim(), r2.trim()];
-    setPending({ code: generateRoomCode(), roommates: mates });
-    setMode("success");
+    setLoading(true);
+    try {
+      const mates = size === 3 ? [me.trim(), r2.trim(), r3.trim()] : [me.trim(), r2.trim()];
+      const roomCode = generateRoomCode();
+      await createRoom(roomCode, `${me.trim()}'s Room`, mates);
+      setPending({ code: roomCode, roommates: mates });
+      setMode("success");
+    } catch (err) {
+      toast.error(err instanceof Error ? err.message : "Failed to create room");
+    } finally {
+      setLoading(false);
+    }
   };
 
-  const join = () => {
+  const join = async () => {
     if (code.trim().length < 3) return;
-    setMode("survey");
+    setLoading(true);
+    setRoomNotFound(false);
+    try {
+      const room = await findRoomByCode(code);
+      if (!room) {
+        setRoomNotFound(true);
+        setLoading(false);
+        return;
+      }
+      setMode("survey");
+    } catch (err) {
+      toast.error(err instanceof Error ? err.message : "Failed to look up room");
+    } finally {
+      setLoading(false);
+    }
   };
 
   const finishJoin = () => {
@@ -39,7 +66,6 @@ export default function RoomSetup() {
         : `SUITE-${code.trim().replace(/\D/g, "").slice(0, 3) || "742"}`,
       roommates: ["You", "Arjun"],
     };
-    // Auto-generate onboarding-driven polls comparing You vs Arjun (the "creator")
     if (sleep) {
       addCustomPoll({
         question: sleep === "owl"
@@ -84,7 +110,7 @@ export default function RoomSetup() {
 
       <div className="relative w-full max-w-md glass-strong rounded-3xl p-6 sm:p-8 animate-pop-in">
         {mode !== "choose" && mode !== "success" && (
-          <button onClick={() => setMode(mode === "survey" ? "join" : "choose")} className="mb-4 text-xs text-muted-foreground flex items-center gap-1 hover:text-foreground transition">
+          <button onClick={() => { setMode(mode === "survey" ? "join" : "choose"); setRoomNotFound(false); }} className="mb-4 text-xs text-muted-foreground flex items-center gap-1 hover:text-foreground transition">
             <ArrowLeft className="h-3 w-3" /> Back
           </button>
         )}
@@ -110,7 +136,7 @@ export default function RoomSetup() {
                 <div className="h-10 w-10 rounded-xl gradient-brand grid place-items-center"><LogIn className="h-5 w-5 text-white" /></div>
                 <div>
                   <p className="font-bold">Join an Existing Room</p>
-                  <p className="text-xs text-muted-foreground">Got a 6-digit code from a roomie?</p>
+                  <p className="text-xs text-muted-foreground">Got a code from a roomie?</p>
                 </div>
               </button>
             </div>
@@ -123,7 +149,7 @@ export default function RoomSetup() {
             <p className="text-sm text-muted-foreground mb-4">Pick your room size, then name the chaos squad.</p>
 
             <div className="mb-4">
-              <p className="text-[10px] uppercase tracking-widest text-muted-foreground mb-2">👥 Room Size</p>
+              <p className="text-[10px] uppercase tracking-widest text-muted-foreground mb-2">Room Size</p>
               <div className="grid grid-cols-2 gap-2 p-1 rounded-2xl glass">
                 {([2, 3] as Size[]).map(s => (
                   <button
@@ -143,10 +169,11 @@ export default function RoomSetup() {
               {size === 3 && <Field placeholder="Roommate 3's nickname" value={r3} onChange={setR3} />}
               <button
                 onClick={create}
-                disabled={!me.trim() || !r2.trim() || (size === 3 && !r3.trim())}
+                disabled={!me.trim() || !r2.trim() || (size === 3 && !r3.trim()) || loading}
                 className="w-full mt-2 py-3 rounded-2xl gradient-brand font-semibold text-white glow-purple hover:scale-[1.02] active:scale-[0.98] transition disabled:opacity-50 disabled:hover:scale-100 flex items-center justify-center gap-2"
               >
-                <Sparkles className="h-4 w-4" /> Generate Room Hub
+                {loading ? <Loader2 className="h-4 w-4 animate-spin" /> : <Sparkles className="h-4 w-4" />}
+                Generate Room Hub
               </button>
             </div>
           </>
@@ -157,21 +184,24 @@ export default function RoomSetup() {
             <h2 className="text-2xl font-bold text-gradient mb-1">Join the hub</h2>
             <p className="text-sm text-muted-foreground mb-5">Pop in the code your roomie sent you.</p>
             <div className="space-y-3">
-              <div className="flex items-center gap-2 px-4 py-3 rounded-2xl glass border border-white/10 focus-within:border-neon-purple/60 transition">
+              <div className={`flex items-center gap-2 px-4 py-3 rounded-2xl glass border transition ${roomNotFound ? "border-destructive/60" : "border-white/10 focus-within:border-neon-purple/60"}`}>
                 <KeyRound className="h-4 w-4 text-muted-foreground" />
                 <input
                   value={code}
-                  onChange={e => setCode(e.target.value.toUpperCase())}
-                  placeholder="Enter 6-Digit Room Code"
+                  onChange={e => { setCode(e.target.value.toUpperCase()); setRoomNotFound(false); }}
+                  placeholder="Enter Room Code (e.g. SUITE-123)"
                   className="flex-1 bg-transparent outline-none text-sm tracking-widest placeholder:text-muted-foreground placeholder:tracking-normal"
                 />
               </div>
+              {roomNotFound && (
+                <p className="text-xs text-destructive font-medium">Room Not Found — double-check the code with your roomie.</p>
+              )}
               <button
                 onClick={join}
-                disabled={code.trim().length < 3}
-                className="w-full py-3 rounded-2xl gradient-brand font-semibold text-white glow-purple hover:scale-[1.02] active:scale-[0.98] transition disabled:opacity-50 disabled:hover:scale-100"
+                disabled={code.trim().length < 3 || loading}
+                className="w-full py-3 rounded-2xl gradient-brand font-semibold text-white glow-purple hover:scale-[1.02] active:scale-[0.98] transition disabled:opacity-50 disabled:hover:scale-100 flex items-center justify-center gap-2"
               >
-                Next: Quick Vibe Check
+                {loading ? <Loader2 className="h-4 w-4 animate-spin" /> : "Next: Quick Vibe Check"}
               </button>
             </div>
           </>
@@ -182,18 +212,18 @@ export default function RoomSetup() {
             <h2 className="text-2xl font-bold text-gradient mb-1">Onboarding Vibe Check</h2>
             <p className="text-sm text-muted-foreground mb-5">3 quick taps. We'll auto-generate polls comparing your habits to your roomie.</p>
 
-            <SurveyBlock title="Are you a night owl or an early bird? 🦉">
-              <Pill active={sleep === "owl"} onClick={() => setSleep("owl")} icon={<Moon className="h-3.5 w-3.5" />} label="Night Owl 🌙" />
-              <Pill active={sleep === "bird"} onClick={() => setSleep("bird")} icon={<Sun className="h-3.5 w-3.5" />} label="Early Bird ☀️" />
+            <SurveyBlock title="Are you a night owl or an early bird?">
+              <Pill active={sleep === "owl"} onClick={() => setSleep("owl")} icon={<Moon className="h-3.5 w-3.5" />} label="Night Owl" />
+              <Pill active={sleep === "bird"} onClick={() => setSleep("bird")} icon={<Sun className="h-3.5 w-3.5" />} label="Early Bird" />
             </SurveyBlock>
 
-            <SurveyBlock title="Ultimate room AC setting? ❄️">
+            <SurveyBlock title="Ultimate room AC setting?">
               <Pill active={ac === "arctic"} onClick={() => setAc("arctic")} icon={<Snowflake className="h-3.5 w-3.5" />} label="Arctic 18°" />
               <Pill active={ac === "chill"} onClick={() => setAc("chill")} label="Chill 22°" />
               <Pill active={ac === "warm"} onClick={() => setAc("warm")} label="Barely On 26°" />
             </SurveyBlock>
 
-            <SurveyBlock title="Stance on sharing snacks/Maggi? 🍜">
+            <SurveyBlock title="Stance on sharing snacks/Maggi?">
               <Pill active={snack === "share"} onClick={() => setSnack("share")} icon={<Cookie className="h-3.5 w-3.5" />} label="Share Freely" />
               <Pill active={snack === "ask"} onClick={() => setSnack("ask")} label="Ask First" />
               <Pill active={snack === "mine"} onClick={() => setSnack("mine")} label="Mine. Don't Touch." />

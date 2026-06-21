@@ -3,10 +3,10 @@ import { n as require_jsx_runtime, r as require_react, t as QueryClientProvider 
 import { _ as useRouter, c as HeadContent, d as Outlet, f as lazyRouteComponent, h as Link, m as createRootRouteWithContext, p as createFileRoute, s as Scripts, u as createRouter } from "../_libs/@tanstack/react-router+[...].mjs";
 import { t as QueryClient } from "../_libs/tanstack__query-core.mjs";
 import { t as Toaster } from "../_libs/sonner.mjs";
-//#region node_modules/.nitro/vite/services/ssr/assets/router-DO1nEKfH.js
+//#region node_modules/.nitro/vite/services/ssr/assets/router-CEW9P0tn.js
 var import_react = /* @__PURE__ */ __toESM(require_react());
 var import_jsx_runtime = require_jsx_runtime();
-var styles_default = "/assets/styles-BpAF_dhm.css";
+var styles_default = "/assets/styles-DJRxOMiW.css";
 function reportLovableError(error, context = {}) {
 	if (typeof window === "undefined") return;
 	window.__lovableEvents?.captureException?.(error, {
@@ -99,7 +99,7 @@ function ErrorComponent({ error, reset }) {
 		})
 	});
 }
-var Route$1 = createRootRouteWithContext()({
+var Route$2 = createRootRouteWithContext()({
 	head: () => ({
 		meta: [
 			{ charSet: "utf-8" },
@@ -185,7 +185,7 @@ function RootShell({ children }) {
 	});
 }
 function RootComponent() {
-	const { queryClient } = Route$1.useRouteContext();
+	const { queryClient } = Route$2.useRouteContext();
 	return /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(QueryClientProvider, {
 		client: queryClient,
 		children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Outlet, {}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Toaster$1, {
@@ -195,8 +195,10 @@ function RootComponent() {
 		})]
 	});
 }
-var $$splitComponentImporter = () => import("./routes-CSMe4O77.mjs");
-var rootRouteChildren = { IndexRoute: createFileRoute("/")({
+var $$splitComponentImporter$1 = () => import("./admin-DFvWiwM6.mjs");
+var Route$1 = createFileRoute("/admin")({ component: lazyRouteComponent($$splitComponentImporter$1, "component") });
+var $$splitComponentImporter = () => import("./routes-CEu_HTh0.mjs");
+var Route = createFileRoute("/")({
 	head: () => ({ meta: [
 		{ title: "SuiteSurvivor" },
 		{
@@ -213,12 +215,21 @@ var rootRouteChildren = { IndexRoute: createFileRoute("/")({
 		}
 	] }),
 	component: lazyRouteComponent($$splitComponentImporter, "component")
-}).update({
-	id: "/",
-	path: "/",
-	getParentRoute: () => Route$1
-}) };
-var routeTree = Route$1._addFileChildren(rootRouteChildren)._addFileTypes();
+});
+var AdminRoute = Route$1.update({
+	id: "/admin",
+	path: "/admin",
+	getParentRoute: () => Route$2
+});
+var rootRouteChildren = {
+	IndexRoute: Route.update({
+		id: "/",
+		path: "/",
+		getParentRoute: () => Route$2
+	}),
+	AdminRoute
+};
+var routeTree = Route$2._addFileChildren(rootRouteChildren)._addFileTypes();
 var getRouter = () => {
 	return createRouter({
 		routeTree,

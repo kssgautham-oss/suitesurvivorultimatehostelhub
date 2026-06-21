@@ -1,9 +1,10 @@
 import { r as __toESM } from "../_runtime.mjs";
+import { r as findRoomByCode, t as createRoom } from "./room-api-DGV2ef_4.mjs";
 import { n as require_jsx_runtime, r as require_react } from "../_libs/react+tanstack__react-query.mjs";
+import { A as KeyRound, B as Coffee, C as Mail, D as Loader, E as Lock, F as Eye, G as Check, H as CircleCheck, I as EyeOff, J as ArrowLeft, L as Egg, M as Ghost, N as Gavel, O as LoaderCircle, P as Flame, R as Copy, T as LogIn, U as CircleAlert, V as Clock, W as ChefHat, _ as RotateCw, a as Users, b as PenLine, c as Sun, d as Snowflake, f as Shuffle, g as Scale, h as ScrollText, i as Wallet, k as Link2, m as Share2, n as X, o as User, p as Shield, q as ArrowRight, r as Wand, s as Trash2, t as Zap, u as Sparkles, v as Receipt, w as LogOut, x as Moon, y as Plus, z as Cookie } from "../_libs/lucide-react.mjs";
 import { n as toast } from "../_libs/sonner.mjs";
-import { A as Gavel, B as CircleAlert, C as LogIn, D as Link2, E as LoaderCircle, F as Copy, H as Check, I as Cookie, L as Coffee, M as Eye, N as EyeOff, O as KeyRound, P as Egg, R as Clock, S as LogOut, T as Loader, U as ArrowRight, V as ChefHat, W as ArrowLeft, _ as Receipt, a as Users, b as Moon, c as Sun, d as Shuffle, f as Shield, g as RotateCw, h as Scale, i as Wallet, j as Flame, k as Ghost, l as Sparkles, m as ScrollText, n as X, o as User, p as Share2, r as Wand, s as Trash2, t as Zap, u as Snowflake, v as Plus, w as Lock, x as Mail, y as PenLine, z as CircleCheck } from "../_libs/lucide-react.mjs";
 import { t as confetti_module_default } from "../_libs/canvas-confetti.mjs";
-//#region node_modules/.nitro/vite/services/ssr/assets/routes-CSMe4O77.js
+//#region node_modules/.nitro/vite/services/ssr/assets/routes-CEu_HTh0.js
 var import_react = /* @__PURE__ */ __toESM(require_react());
 var import_jsx_runtime = require_jsx_runtime();
 var KEY = "hostel-harmony-auth";
@@ -2723,25 +2724,49 @@ function RoomSetup() {
 	const [code, setCode] = (0, import_react.useState)("");
 	const [pending, setPending] = (0, import_react.useState)(null);
 	const [copied, setCopied] = (0, import_react.useState)(false);
+	const [loading, setLoading] = (0, import_react.useState)(false);
+	const [roomNotFound, setRoomNotFound] = (0, import_react.useState)(false);
 	const [sleep, setSleep] = (0, import_react.useState)(null);
 	const [ac, setAc] = (0, import_react.useState)(null);
 	const [snack, setSnack] = (0, import_react.useState)(null);
-	const create = () => {
+	const create = async () => {
 		if (!me.trim() || !r2.trim() || size === 3 && !r3.trim()) return;
-		const mates = size === 3 ? [
-			me.trim(),
-			r2.trim(),
-			r3.trim()
-		] : [me.trim(), r2.trim()];
-		setPending({
-			code: generateRoomCode(),
-			roommates: mates
-		});
-		setMode("success");
+		setLoading(true);
+		try {
+			const mates = size === 3 ? [
+				me.trim(),
+				r2.trim(),
+				r3.trim()
+			] : [me.trim(), r2.trim()];
+			const roomCode = generateRoomCode();
+			await createRoom(roomCode, `${me.trim()}'s Room`, mates);
+			setPending({
+				code: roomCode,
+				roommates: mates
+			});
+			setMode("success");
+		} catch (err) {
+			toast.error(err instanceof Error ? err.message : "Failed to create room");
+		} finally {
+			setLoading(false);
+		}
 	};
-	const join = () => {
+	const join = async () => {
 		if (code.trim().length < 3) return;
-		setMode("survey");
+		setLoading(true);
+		setRoomNotFound(false);
+		try {
+			if (!await findRoomByCode(code)) {
+				setRoomNotFound(true);
+				setLoading(false);
+				return;
+			}
+			setMode("survey");
+		} catch (err) {
+			toast.error(err instanceof Error ? err.message : "Failed to look up room");
+		} finally {
+			setLoading(false);
+		}
 	};
 	const finishJoin = () => {
 		const room = {
@@ -2788,7 +2813,10 @@ function RoomSetup() {
 				className: "relative w-full max-w-md glass-strong rounded-3xl p-6 sm:p-8 animate-pop-in",
 				children: [
 					mode !== "choose" && mode !== "success" && /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("button", {
-						onClick: () => setMode(mode === "survey" ? "join" : "choose"),
+						onClick: () => {
+							setMode(mode === "survey" ? "join" : "choose");
+							setRoomNotFound(false);
+						},
 						className: "mb-4 text-xs text-muted-foreground flex items-center gap-1 hover:text-foreground transition",
 						children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(ArrowLeft, { className: "h-3 w-3" }), " Back"]
 					}),
@@ -2834,7 +2862,7 @@ function RoomSetup() {
 								children: "Join an Existing Room"
 							}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", {
 								className: "text-xs text-muted-foreground",
-								children: "Got a 6-digit code from a roomie?"
+								children: "Got a code from a roomie?"
 							})] })]
 						})]
 					})] }),
@@ -2851,7 +2879,7 @@ function RoomSetup() {
 							className: "mb-4",
 							children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", {
 								className: "text-[10px] uppercase tracking-widest text-muted-foreground mb-2",
-								children: "👥 Room Size"
+								children: "Room Size"
 							}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
 								className: "grid grid-cols-2 gap-2 p-1 rounded-2xl glass",
 								children: [2, 3].map((s) => /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("button", {
@@ -2881,9 +2909,9 @@ function RoomSetup() {
 								}),
 								/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("button", {
 									onClick: create,
-									disabled: !me.trim() || !r2.trim() || size === 3 && !r3.trim(),
+									disabled: !me.trim() || !r2.trim() || size === 3 && !r3.trim() || loading,
 									className: "w-full mt-2 py-3 rounded-2xl gradient-brand font-semibold text-white glow-purple hover:scale-[1.02] active:scale-[0.98] transition disabled:opacity-50 disabled:hover:scale-100 flex items-center justify-center gap-2",
-									children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Sparkles, { className: "h-4 w-4" }), " Generate Room Hub"]
+									children: [loading ? /* @__PURE__ */ (0, import_jsx_runtime.jsx)(LoaderCircle, { className: "h-4 w-4 animate-spin" }) : /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Sparkles, { className: "h-4 w-4" }), "Generate Room Hub"]
 								})
 							]
 						})
@@ -2899,20 +2927,30 @@ function RoomSetup() {
 						}),
 						/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
 							className: "space-y-3",
-							children: [/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-								className: "flex items-center gap-2 px-4 py-3 rounded-2xl glass border border-white/10 focus-within:border-neon-purple/60 transition",
-								children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(KeyRound, { className: "h-4 w-4 text-muted-foreground" }), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("input", {
-									value: code,
-									onChange: (e) => setCode(e.target.value.toUpperCase()),
-									placeholder: "Enter 6-Digit Room Code",
-									className: "flex-1 bg-transparent outline-none text-sm tracking-widest placeholder:text-muted-foreground placeholder:tracking-normal"
-								})]
-							}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("button", {
-								onClick: join,
-								disabled: code.trim().length < 3,
-								className: "w-full py-3 rounded-2xl gradient-brand font-semibold text-white glow-purple hover:scale-[1.02] active:scale-[0.98] transition disabled:opacity-50 disabled:hover:scale-100",
-								children: "Next: Quick Vibe Check"
-							})]
+							children: [
+								/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+									className: `flex items-center gap-2 px-4 py-3 rounded-2xl glass border transition ${roomNotFound ? "border-destructive/60" : "border-white/10 focus-within:border-neon-purple/60"}`,
+									children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(KeyRound, { className: "h-4 w-4 text-muted-foreground" }), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("input", {
+										value: code,
+										onChange: (e) => {
+											setCode(e.target.value.toUpperCase());
+											setRoomNotFound(false);
+										},
+										placeholder: "Enter Room Code (e.g. SUITE-123)",
+										className: "flex-1 bg-transparent outline-none text-sm tracking-widest placeholder:text-muted-foreground placeholder:tracking-normal"
+									})]
+								}),
+								roomNotFound && /* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", {
+									className: "text-xs text-destructive font-medium",
+									children: "Room Not Found — double-check the code with your roomie."
+								}),
+								/* @__PURE__ */ (0, import_jsx_runtime.jsx)("button", {
+									onClick: join,
+									disabled: code.trim().length < 3 || loading,
+									className: "w-full py-3 rounded-2xl gradient-brand font-semibold text-white glow-purple hover:scale-[1.02] active:scale-[0.98] transition disabled:opacity-50 disabled:hover:scale-100 flex items-center justify-center gap-2",
+									children: loading ? /* @__PURE__ */ (0, import_jsx_runtime.jsx)(LoaderCircle, { className: "h-4 w-4 animate-spin" }) : "Next: Quick Vibe Check"
+								})
+							]
 						})
 					] }),
 					mode === "survey" && /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(import_jsx_runtime.Fragment, { children: [
@@ -2925,21 +2963,21 @@ function RoomSetup() {
 							children: "3 quick taps. We'll auto-generate polls comparing your habits to your roomie."
 						}),
 						/* @__PURE__ */ (0, import_jsx_runtime.jsxs)(SurveyBlock, {
-							title: "Are you a night owl or an early bird? 🦉",
+							title: "Are you a night owl or an early bird?",
 							children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Pill, {
 								active: sleep === "owl",
 								onClick: () => setSleep("owl"),
 								icon: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Moon, { className: "h-3.5 w-3.5" }),
-								label: "Night Owl 🌙"
+								label: "Night Owl"
 							}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Pill, {
 								active: sleep === "bird",
 								onClick: () => setSleep("bird"),
 								icon: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Sun, { className: "h-3.5 w-3.5" }),
-								label: "Early Bird ☀️"
+								label: "Early Bird"
 							})]
 						}),
 						/* @__PURE__ */ (0, import_jsx_runtime.jsxs)(SurveyBlock, {
-							title: "Ultimate room AC setting? ❄️",
+							title: "Ultimate room AC setting?",
 							children: [
 								/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Pill, {
 									active: ac === "arctic",
@@ -2960,7 +2998,7 @@ function RoomSetup() {
 							]
 						}),
 						/* @__PURE__ */ (0, import_jsx_runtime.jsxs)(SurveyBlock, {
-							title: "Stance on sharing snacks/Maggi? 🍜",
+							title: "Stance on sharing snacks/Maggi?",
 							children: [
 								/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Pill, {
 									active: snack === "share",
