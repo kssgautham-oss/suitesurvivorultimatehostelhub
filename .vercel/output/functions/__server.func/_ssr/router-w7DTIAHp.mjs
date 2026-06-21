@@ -3,10 +3,10 @@ import { n as require_jsx_runtime, r as require_react, t as QueryClientProvider 
 import { _ as useRouter, c as HeadContent, d as Outlet, f as lazyRouteComponent, h as Link, m as createRootRouteWithContext, p as createFileRoute, s as Scripts, u as createRouter } from "../_libs/@tanstack/react-router+[...].mjs";
 import { t as QueryClient } from "../_libs/tanstack__query-core.mjs";
 import { t as Toaster } from "../_libs/sonner.mjs";
-//#region node_modules/.nitro/vite/services/ssr/assets/router-BH49I9PP.js
+//#region node_modules/.nitro/vite/services/ssr/assets/router-w7DTIAHp.js
 var import_react = /* @__PURE__ */ __toESM(require_react());
 var import_jsx_runtime = require_jsx_runtime();
-var styles_default = "/assets/styles-kYeMaGmx.css";
+var styles_default = "/assets/styles-ao805cmY.css";
 function reportLovableError(error, context = {}) {
 	if (typeof window === "undefined") return;
 	window.__lovableEvents?.captureException?.(error, {
@@ -199,7 +199,7 @@ var $$splitComponentImporter$2 = () => import("./privacy-CSGzE0jw.mjs");
 var Route$2 = createFileRoute("/privacy")({ component: lazyRouteComponent($$splitComponentImporter$2, "component") });
 var $$splitComponentImporter$1 = () => import("./admin-DweuAQbJ.mjs");
 var Route$1 = createFileRoute("/admin")({ component: lazyRouteComponent($$splitComponentImporter$1, "component") });
-var $$splitComponentImporter = () => import("./routes-DXp9-3nY.mjs");
+var $$splitComponentImporter = () => import("./routes-BTVvDTC5.mjs");
 var Route = createFileRoute("/")({
 	head: () => ({ meta: [
 		{ title: "SuiteSurvivor" },

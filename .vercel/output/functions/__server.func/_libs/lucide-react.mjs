@@ -467,6 +467,46 @@ var Hash = createLucideIcon("hash", [
 * This source code is licensed under the ISC license.
 * See the LICENSE file in the root directory of this source tree.
 */
+var Hop = createLucideIcon("hop", [
+	["path", {
+		d: "M10.82 16.12c1.69.6 3.91.79 5.18.85.55.03 1-.42.97-.97-.06-1.27-.26-3.5-.85-5.18",
+		key: "18lxf1"
+	}],
+	["path", {
+		d: "M11.5 6.5c1.64 0 5-.38 6.71-1.07.52-.2.55-.82.12-1.17A10 10 0 0 0 4.26 18.33c.35.43.96.4 1.17-.12.69-1.71 1.07-5.07 1.07-6.71 1.34.45 3.1.9 4.88.62a.88.88 0 0 0 .73-.74c.3-2.14-.15-3.5-.61-4.88",
+		key: "vtfxrw"
+	}],
+	["path", {
+		d: "M15.62 16.95c.2.85.62 2.76.5 4.28a.77.77 0 0 1-.9.7 16.64 16.64 0 0 1-4.08-1.36",
+		key: "13hl71"
+	}],
+	["path", {
+		d: "M16.13 21.05c1.65.63 3.68.84 4.87.91a.9.9 0 0 0 .96-.96 17.68 17.68 0 0 0-.9-4.87",
+		key: "1sl8oj"
+	}],
+	["path", {
+		d: "M16.94 15.62c.86.2 2.77.62 4.29.5a.77.77 0 0 0 .7-.9 16.64 16.64 0 0 0-1.36-4.08",
+		key: "19c6kt"
+	}],
+	["path", {
+		d: "M17.99 5.52a20.82 20.82 0 0 1 3.15 4.5.8.8 0 0 1-.68 1.13c-2.33.2-5.3-.32-8.27-1.57",
+		key: "85ghs3"
+	}],
+	["path", {
+		d: "M4.93 4.93 3 3a.7.7 0 0 1 0-1",
+		key: "x087yj"
+	}],
+	["path", {
+		d: "M9.58 12.18c1.24 2.98 1.77 5.95 1.57 8.28a.8.8 0 0 1-1.13.68 20.82 20.82 0 0 1-4.5-3.15",
+		key: "11xdqo"
+	}]
+]);
+/**
+* @license lucide-react v0.575.0 - ISC
+*
+* This source code is licensed under the ISC license.
+* See the LICENSE file in the root directory of this source tree.
+*/
 var KeyRound = createLucideIcon("key-round", [["path", {
 	d: "M2.586 17.414A2 2 0 0 0 2 18.828V21a1 1 0 0 0 1 1h3a1 1 0 0 0 1-1v-1a1 1 0 0 1 1-1h1a1 1 0 0 0 1-1v-1a1 1 0 0 1 1-1h.172a2 2 0 0 0 1.414-.586l.814-.814a6.5 6.5 0 1 0-4-4z",
 	key: "1s6t7t"
@@ -802,16 +842,6 @@ var Share2 = createLucideIcon("share-2", [
 * This source code is licensed under the ISC license.
 * See the LICENSE file in the root directory of this source tree.
 */
-var Shield = createLucideIcon("shield", [["path", {
-	d: "M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z",
-	key: "oel41y"
-}]]);
-/**
-* @license lucide-react v0.575.0 - ISC
-*
-* This source code is licensed under the ISC license.
-* See the LICENSE file in the root directory of this source tree.
-*/
 var Shuffle = createLucideIcon("shuffle", [
 	["path", {
 		d: "m18 14 4 4-4 4",
@@ -1122,4 +1152,4 @@ var Zap = createLucideIcon("zap", [["path", {
 	key: "1xq2db"
 }]]);
 //#endregion
-export { KeyRound as A, Coffee as B, Mail as C, Loader as D, Lock as E, Eye as F, Check as G, CircleCheck as H, EyeOff as I, ArrowLeft as J, Calendar as K, Egg as L, Ghost as M, Gavel as N, LoaderCircle as O, Flame as P, Copy as R, MessageSquare as S, LogIn as T, CircleAlert as U, Clock as V, ChefHat as W, RotateCw as _, Users as a, PenLine as b, Sun as c, Snowflake as d, Shuffle as f, Scale as g, ScrollText as h, Wallet as i, Hash as j, Link2 as k, Star as l, Share2 as m, X as n, User as o, Shield as p, ArrowRight as q, Wand as r, Trash2 as s, Zap as t, Sparkles as u, Receipt as v, LogOut as w, Moon as x, Plus as y, Cookie as z };
+export { Hop as A, Coffee as B, LogOut as C, LoaderCircle as D, Loader as E, Eye as F, Check as G, CircleCheck as H, EyeOff as I, ArrowLeft as J, Calendar as K, Egg as L, Ghost as M, Gavel as N, Link2 as O, Flame as P, Copy as R, Mail as S, Lock as T, CircleAlert as U, Clock as V, ChefHat as W, Receipt as _, Users as a, Moon as b, Sun as c, Snowflake as d, Shuffle as f, RotateCw as g, Scale as h, Wallet as i, Hash as j, KeyRound as k, Star as l, ScrollText as m, X as n, User as o, Share2 as p, ArrowRight as q, Wand as r, Trash2 as s, Zap as t, Sparkles as u, Plus as v, LogIn as w, MessageSquare as x, PenLine as y, Cookie as z };

@@ -1,10 +1,10 @@
 import { r as __toESM } from "../_runtime.mjs";
 import { r as findRoomByCode, t as createRoom } from "./room-api-DGV2ef_4.mjs";
 import { n as require_jsx_runtime, r as require_react } from "../_libs/react+tanstack__react-query.mjs";
-import { A as KeyRound, B as Coffee, C as Mail, D as Loader, E as Lock, F as Eye, G as Check, H as CircleCheck, I as EyeOff, J as ArrowLeft, L as Egg, M as Ghost, N as Gavel, O as LoaderCircle, P as Flame, R as Copy, T as LogIn, U as CircleAlert, V as Clock, W as ChefHat, _ as RotateCw, a as Users, b as PenLine, c as Sun, d as Snowflake, f as Shuffle, g as Scale, h as ScrollText, i as Wallet, k as Link2, m as Share2, n as X, o as User, p as Shield, q as ArrowRight, r as Wand, s as Trash2, t as Zap, u as Sparkles, v as Receipt, w as LogOut, x as Moon, y as Plus, z as Cookie } from "../_libs/lucide-react.mjs";
+import { A as Hop, B as Coffee, C as LogOut, D as LoaderCircle, E as Loader, F as Eye, G as Check, H as CircleCheck, I as EyeOff, J as ArrowLeft, L as Egg, M as Ghost, N as Gavel, O as Link2, P as Flame, R as Copy, S as Mail, T as Lock, U as CircleAlert, V as Clock, W as ChefHat, _ as Receipt, a as Users, b as Moon, c as Sun, d as Snowflake, f as Shuffle, g as RotateCw, h as Scale, i as Wallet, k as KeyRound, m as ScrollText, n as X, o as User, p as Share2, q as ArrowRight, r as Wand, s as Trash2, t as Zap, u as Sparkles, v as Plus, w as LogIn, x as MessageSquare, y as PenLine, z as Cookie } from "../_libs/lucide-react.mjs";
 import { n as toast } from "../_libs/sonner.mjs";
 import { t as confetti_module_default } from "../_libs/canvas-confetti.mjs";
-//#region node_modules/.nitro/vite/services/ssr/assets/routes-DXp9-3nY.js
+//#region node_modules/.nitro/vite/services/ssr/assets/routes-BTVvDTC5.js
 var import_react = /* @__PURE__ */ __toESM(require_react());
 var import_jsx_runtime = require_jsx_runtime();
 var PREFIX = "ss_";
@@ -309,21 +309,39 @@ var AppleIcon = () => /* @__PURE__ */ (0, import_jsx_runtime.jsx)("svg", {
 });
 var FEATURES = [
 	{
+		icon: Hop,
+		title: "Room Management",
+		body: "Create or join rooms with unique codes. Track roommates, manage shared spaces, and keep everyone in sync.",
+		accent: "bg-neon-purple/15 text-neon-purple border-neon-purple/30"
+	},
+	{
+		icon: Wallet,
+		title: "Group Expense Tracking",
+		body: "Split rent, utilities, food, and snacks with itemized chips. Real-time balances so everyone knows who owes what.",
+		accent: "bg-electric-orange/15 text-electric-orange border-electric-orange/30"
+	},
+	{
+		icon: MessageSquare,
+		title: "Shared Reviews",
+		body: "Rate your room experience and leave feedback. Honest reviews help future roommates find the right vibe.",
+		accent: "bg-success/15 text-success border-success/30"
+	},
+	{
 		icon: ChefHat,
 		title: "Midnight Pantry AI",
 		body: "Match your exact hostel ingredients. Pick 2–5 items and get a strict-mode recipe that uses only what you have.",
 		accent: "bg-neon-purple/15 text-neon-purple border-neon-purple/30"
 	},
 	{
-		icon: Wallet,
-		title: "Smart Expense Splitter",
-		body: "Track Rent, Wifi, Food, Utilities, and Snacks with itemized chips. See who owes who in real time.",
+		icon: Scale,
+		title: "The Tribunal",
+		body: "Move room disputes cleanly from Open Dispute to Jury Review to Resolved. Anonymous POV voting keeps it fair.",
 		accent: "bg-electric-orange/15 text-electric-orange border-electric-orange/30"
 	},
 	{
-		icon: Scale,
-		title: "The Tribunal",
-		body: "Move room disputes cleanly from Open Dispute → Jury Review → Resolved. POV voting with anonymous jurors.",
+		icon: Zap,
+		title: "Instant Demo Mode",
+		body: "No sign-up required. Jump straight into a fully populated dashboard and explore every feature in seconds.",
 		accent: "bg-success/15 text-success border-success/30"
 	}
 ];
@@ -419,193 +437,191 @@ function AuthScreen() {
 					})
 				]
 			}),
-			/* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
-				className: "relative flex-1 flex items-center justify-center px-4 py-10",
+			/* @__PURE__ */ (0, import_jsx_runtime.jsx)("section", {
+				className: "relative z-10 px-4 pt-16 pb-10",
 				children: /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-					className: "w-full max-w-md space-y-6",
+					className: "max-w-5xl mx-auto text-center space-y-6",
 					children: [
 						/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-							className: "text-center space-y-2",
-							children: [
-								/* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
-									className: "mx-auto h-16 w-16 rounded-2xl gradient-brand grid place-items-center glow-purple",
-									children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Shield, {
-										className: "h-8 w-8 text-white",
-										strokeWidth: 2.5
-									})
-								}),
-								/* @__PURE__ */ (0, import_jsx_runtime.jsx)("h1", {
-									className: "text-3xl sm:text-4xl font-black text-gradient leading-tight",
-									children: "SuiteSurvivor"
-								}),
-								/* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", {
-									className: "text-sm font-medium text-muted-foreground/80",
-									children: "The Ultimate Hostel Hub"
-								}),
-								/* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", {
-									className: "text-sm text-muted-foreground max-w-sm mx-auto leading-relaxed",
-									children: "The ultimate hub to vibe with roommates, split expenses, and resolve room drama before it boils over."
-								})
-							]
+							className: "inline-flex items-center gap-2 px-4 py-1.5 rounded-full glass text-xs font-semibold text-neon-purple",
+							children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Sparkles, { className: "h-3.5 w-3.5" }), "The Ultimate Space for Roommates to Co-Live & Sync"]
 						}),
-						/* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
-							className: "grid gap-3",
-							children: FEATURES.map((f) => /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-								className: "glass rounded-2xl p-4 flex items-start gap-3 transition hover:bg-white/[0.08]",
-								children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
-									className: `shrink-0 h-10 w-10 rounded-xl grid place-items-center border ${f.accent}`,
-									children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(f.icon, { className: "h-5 w-5" })
-								}), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-									className: "min-w-0",
-									children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", {
-										className: "font-bold text-sm",
-										children: f.title
-									}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", {
-										className: "text-xs text-muted-foreground mt-0.5 leading-relaxed",
-										children: f.body
-									})]
-								})]
-							}, f.title))
-						}),
-						/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("button", {
-							onClick: startDemo,
-							disabled: !!loading,
-							className: "w-full py-4 rounded-2xl gradient-brand text-white font-black text-base glow-purple hover:scale-[1.02] active:scale-[0.98] transition disabled:opacity-70 disabled:hover:scale-100 flex items-center justify-center gap-2 relative overflow-hidden",
-							children: [
-								loading === "demo" ? /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Loader, { className: "h-5 w-5 animate-spin" }) : /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Sparkles, { className: "h-5 w-5" }),
-								loading === "demo" ? "Launching instant tour…" : "Enter Instant Demo Mode (Skip Auth)",
-								/* @__PURE__ */ (0, import_jsx_runtime.jsx)(ArrowRight, { className: "h-4 w-4" })
-							]
+						/* @__PURE__ */ (0, import_jsx_runtime.jsx)("h1", {
+							className: "text-4xl sm:text-5xl lg:text-6xl font-black text-gradient leading-[1.1] tracking-tight",
+							children: "SuiteSurvivor"
 						}),
 						/* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", {
-							className: "text-[11px] text-center text-muted-foreground -mt-4",
-							children: "No sign-up required. Full mock data. Explore every feature in 60 seconds."
+							className: "text-base sm:text-lg text-muted-foreground max-w-xl mx-auto leading-relaxed",
+							children: "The all-in-one hub to vibe with roommates, split expenses, resolve drama, and share reviews — before things boil over."
 						}),
 						/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-							className: "flex items-center gap-3",
-							children: [
-								/* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", { className: "h-px flex-1 bg-border" }),
-								/* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", {
-									className: "text-xs text-muted-foreground font-medium",
-									children: "or sign in to save your room"
-								}),
-								/* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", { className: "h-px flex-1 bg-border" })
-							]
-						}),
-						/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-							className: "glass-strong rounded-3xl p-6 sm:p-8",
-							children: [
-								/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-									className: "relative grid grid-cols-2 p-1 rounded-full glass mb-6",
-									children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
-										className: "absolute top-1 bottom-1 w-1/2 rounded-full gradient-brand transition-transform duration-300",
-										style: { transform: mode === "signin" ? "translateX(0)" : "translateX(100%)" }
-									}), ["signin", "signup"].map((m) => /* @__PURE__ */ (0, import_jsx_runtime.jsx)("button", {
-										onClick: () => setMode(m),
-										className: "relative z-10 py-2 text-sm font-semibold",
-										children: m === "signin" ? "Sign In" : "Create Account"
-									}, m))]
-								}),
-								/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-									className: "space-y-3",
-									children: [
-										mode === "signup" && /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Field$1, {
-											icon: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(User, { className: "h-4 w-4" }),
-											placeholder: "Full name",
-											value: name,
-											onChange: setName
-										}),
-										/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Field$1, {
-											icon: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Mail, { className: "h-4 w-4" }),
-											placeholder: "Email",
-											value: email,
-											onChange: setEmail,
-											type: "email",
-											valid: email.length > 0 ? emailValid : void 0
-										}),
-										/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Field$1, {
-											icon: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Lock, { className: "h-4 w-4" }),
-											placeholder: "Password",
-											value: password,
-											onChange: setPassword,
-											type: show ? "text" : "password",
-											right: /* @__PURE__ */ (0, import_jsx_runtime.jsx)("button", {
-												type: "button",
-												onClick: () => setShow((s) => !s),
-												className: "text-muted-foreground hover:text-foreground transition",
-												"aria-label": show ? "Hide password" : "Show password",
-												children: show ? /* @__PURE__ */ (0, import_jsx_runtime.jsx)(EyeOff, { className: "h-4 w-4" }) : /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Eye, { className: "h-4 w-4" })
-											})
-										}),
-										mode === "signup" && /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Field$1, {
-											icon: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(KeyRound, { className: "h-4 w-4" }),
-											placeholder: "Room code / invite link (optional)",
-											value: room,
-											onChange: setRoom
-										}),
-										/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-											className: "flex items-center justify-between text-xs pt-1",
-											children: [/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("label", {
-												className: "flex items-center gap-2 cursor-pointer select-none",
-												children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", {
-													onClick: () => setRemember((r) => !r),
-													className: `h-4 w-4 rounded grid place-items-center transition ${remember ? "gradient-brand" : "glass"}`,
-													children: remember && /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Check, {
-														className: "h-3 w-3 text-white",
-														strokeWidth: 3
-													})
-												}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", {
-													className: "text-muted-foreground",
-													children: "Remember me"
-												})]
-											}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("a", {
-												href: "#",
-												className: "text-gradient font-semibold hover:opacity-80",
-												children: "Forgot password?"
-											})]
-										}),
-										/* @__PURE__ */ (0, import_jsx_runtime.jsx)("button", {
-											onClick: () => submit("email"),
-											disabled: !!loading,
-											className: "w-full mt-2 py-3 rounded-2xl gradient-brand font-semibold text-white glow-purple hover:scale-[1.02] active:scale-[0.98] transition disabled:opacity-70 disabled:hover:scale-100 flex items-center justify-center gap-2",
-											children: loading === "email" ? /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Loader, { className: "h-5 w-5 animate-spin" }) : mode === "signin" ? "Sign In" : "Create Account"
-										})
-									]
-								}),
-								/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-									className: "flex items-center gap-3 my-5",
-									children: [
-										/* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", { className: "h-px flex-1 bg-border" }),
-										/* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", {
-											className: "text-xs text-muted-foreground",
-											children: "or"
-										}),
-										/* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", { className: "h-px flex-1 bg-border" })
-									]
-								}),
-								/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-									className: "grid grid-cols-2 gap-3",
-									children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("button", {
-										onClick: () => submit("google"),
-										disabled: !!loading,
-										className: "py-3 rounded-2xl glass hover:bg-white/15 transition flex items-center justify-center gap-2 font-medium disabled:opacity-70",
-										children: loading === "google" ? /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Loader, { className: "h-5 w-5 animate-spin" }) : /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(import_jsx_runtime.Fragment, { children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(GoogleIcon, {}), " Google"] })
-									}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("button", {
-										onClick: () => submit("apple"),
-										disabled: !!loading,
-										className: "py-3 rounded-2xl glass hover:bg-white/15 transition flex items-center justify-center gap-2 font-medium disabled:opacity-70",
-										children: loading === "apple" ? /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Loader, { className: "h-5 w-5 animate-spin" }) : /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(import_jsx_runtime.Fragment, { children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(AppleIcon, {}), " Apple"] })
-									})]
-								})
-							]
+							className: "flex flex-col sm:flex-row items-center justify-center gap-3 pt-2",
+							children: [/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("button", {
+								onClick: startDemo,
+								disabled: !!loading,
+								className: "group px-8 py-4 rounded-2xl gradient-brand text-white font-black text-base glow-purple hover:scale-[1.03] active:scale-[0.97] transition disabled:opacity-70 disabled:hover:scale-100 flex items-center gap-2 relative overflow-hidden",
+								children: [
+									loading === "demo" ? /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Loader, { className: "h-5 w-5 animate-spin" }) : /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Zap, { className: "h-5 w-5 transition group-hover:scale-110" }),
+									loading === "demo" ? "Launching instant tour…" : "Quick Demo Mode — Skip Auth",
+									/* @__PURE__ */ (0, import_jsx_runtime.jsx)(ArrowRight, { className: "h-4 w-4 transition group-hover:translate-x-0.5" })
+								]
+							}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", {
+								className: "text-xs text-muted-foreground",
+								children: "No sign-up required. Explore every feature in 60 seconds."
+							})]
 						})
 					]
 				})
 			}),
-			/* @__PURE__ */ (0, import_jsx_runtime.jsx)("footer", {
-				className: "relative z-10 border-t border-white/10 py-6 px-4",
+			/* @__PURE__ */ (0, import_jsx_runtime.jsx)("section", {
+				className: "relative z-10 px-4 pb-10",
+				children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
+					className: "max-w-5xl mx-auto",
+					children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
+						className: "grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4",
+						children: FEATURES.map((f) => /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+							className: "glass-strong rounded-2xl p-5 flex flex-col gap-3 transition hover:bg-white/[0.08] hover:-translate-y-0.5",
+							children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
+								className: `shrink-0 h-10 w-10 rounded-xl grid place-items-center border ${f.accent}`,
+								children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(f.icon, { className: "h-5 w-5" })
+							}), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", { children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", {
+								className: "font-bold text-sm",
+								children: f.title
+							}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", {
+								className: "text-xs text-muted-foreground mt-1 leading-relaxed",
+								children: f.body
+							})] })]
+						}, f.title))
+					})
+				})
+			}),
+			/* @__PURE__ */ (0, import_jsx_runtime.jsx)("section", {
+				className: "relative z-10 px-4 pb-12",
 				children: /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-					className: "max-w-md mx-auto flex flex-col sm:flex-row items-center justify-between gap-3 text-xs text-muted-foreground",
+					className: "max-w-md mx-auto",
+					children: [/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+						className: "flex items-center gap-3 mb-6",
+						children: [
+							/* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", { className: "h-px flex-1 bg-border" }),
+							/* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", {
+								className: "text-xs text-muted-foreground font-medium",
+								children: "or sign in to save your room"
+							}),
+							/* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", { className: "h-px flex-1 bg-border" })
+						]
+					}), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+						className: "glass-strong rounded-3xl p-6 sm:p-8",
+						children: [
+							/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+								className: "relative grid grid-cols-2 p-1 rounded-full glass mb-6",
+								children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
+									className: "absolute top-1 bottom-1 w-1/2 rounded-full gradient-brand transition-transform duration-300",
+									style: { transform: mode === "signin" ? "translateX(0)" : "translateX(100%)" }
+								}), ["signin", "signup"].map((m) => /* @__PURE__ */ (0, import_jsx_runtime.jsx)("button", {
+									onClick: () => setMode(m),
+									className: "relative z-10 py-2 text-sm font-semibold",
+									children: m === "signin" ? "Sign In" : "Create Account"
+								}, m))]
+							}),
+							/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+								className: "space-y-3",
+								children: [
+									mode === "signup" && /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Field$1, {
+										icon: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(User, { className: "h-4 w-4" }),
+										placeholder: "Full name",
+										value: name,
+										onChange: setName
+									}),
+									/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Field$1, {
+										icon: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Mail, { className: "h-4 w-4" }),
+										placeholder: "Email",
+										value: email,
+										onChange: setEmail,
+										type: "email",
+										valid: email.length > 0 ? emailValid : void 0
+									}),
+									/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Field$1, {
+										icon: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Lock, { className: "h-4 w-4" }),
+										placeholder: "Password",
+										value: password,
+										onChange: setPassword,
+										type: show ? "text" : "password",
+										right: /* @__PURE__ */ (0, import_jsx_runtime.jsx)("button", {
+											type: "button",
+											onClick: () => setShow((s) => !s),
+											className: "text-muted-foreground hover:text-foreground transition",
+											"aria-label": show ? "Hide password" : "Show password",
+											children: show ? /* @__PURE__ */ (0, import_jsx_runtime.jsx)(EyeOff, { className: "h-4 w-4" }) : /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Eye, { className: "h-4 w-4" })
+										})
+									}),
+									mode === "signup" && /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Field$1, {
+										icon: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(KeyRound, { className: "h-4 w-4" }),
+										placeholder: "Room code / invite link (optional)",
+										value: room,
+										onChange: setRoom
+									}),
+									/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+										className: "flex items-center justify-between text-xs pt-1",
+										children: [/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("label", {
+											className: "flex items-center gap-2 cursor-pointer select-none",
+											children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", {
+												onClick: () => setRemember((r) => !r),
+												className: `h-4 w-4 rounded grid place-items-center transition ${remember ? "gradient-brand" : "glass"}`,
+												children: remember && /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Check, {
+													className: "h-3 w-3 text-white",
+													strokeWidth: 3
+												})
+											}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", {
+												className: "text-muted-foreground",
+												children: "Remember me"
+											})]
+										}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("a", {
+											href: "#",
+											className: "text-gradient font-semibold hover:opacity-80",
+											children: "Forgot password?"
+										})]
+									}),
+									/* @__PURE__ */ (0, import_jsx_runtime.jsx)("button", {
+										onClick: () => submit("email"),
+										disabled: !!loading,
+										className: "w-full mt-2 py-3 rounded-2xl gradient-brand font-semibold text-white glow-purple hover:scale-[1.02] active:scale-[0.98] transition disabled:opacity-70 disabled:hover:scale-100 flex items-center justify-center gap-2",
+										children: loading === "email" ? /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Loader, { className: "h-5 w-5 animate-spin" }) : mode === "signin" ? "Sign In" : "Create Account"
+									})
+								]
+							}),
+							/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+								className: "flex items-center gap-3 my-5",
+								children: [
+									/* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", { className: "h-px flex-1 bg-border" }),
+									/* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", {
+										className: "text-xs text-muted-foreground",
+										children: "or"
+									}),
+									/* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", { className: "h-px flex-1 bg-border" })
+								]
+							}),
+							/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+								className: "grid grid-cols-2 gap-3",
+								children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("button", {
+									onClick: () => submit("google"),
+									disabled: !!loading,
+									className: "py-3 rounded-2xl glass hover:bg-white/15 transition flex items-center justify-center gap-2 font-medium disabled:opacity-70",
+									children: loading === "google" ? /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Loader, { className: "h-5 w-5 animate-spin" }) : /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(import_jsx_runtime.Fragment, { children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(GoogleIcon, {}), " Google"] })
+								}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("button", {
+									onClick: () => submit("apple"),
+									disabled: !!loading,
+									className: "py-3 rounded-2xl glass hover:bg-white/15 transition flex items-center justify-center gap-2 font-medium disabled:opacity-70",
+									children: loading === "apple" ? /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Loader, { className: "h-5 w-5 animate-spin" }) : /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(import_jsx_runtime.Fragment, { children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(AppleIcon, {}), " Apple"] })
+								})]
+							})
+						]
+					})]
+				})
+			}),
+			/* @__PURE__ */ (0, import_jsx_runtime.jsx)("footer", {
+				className: "relative z-10 border-t border-white/10 py-8 px-4 mt-auto",
+				children: /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+					className: "max-w-5xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-muted-foreground",
 					children: [/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
 						className: "flex items-center gap-4",
 						children: [

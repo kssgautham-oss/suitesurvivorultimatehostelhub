@@ -1,7 +1,7 @@
 import { r as __toESM } from "../_runtime.mjs";
 import { n as fetchAllReviews } from "./room-api-DGV2ef_4.mjs";
 import { n as require_jsx_runtime, r as require_react } from "../_libs/react+tanstack__react-query.mjs";
-import { D as Loader, E as Lock, K as Calendar, S as MessageSquare, j as Hash, l as Star } from "../_libs/lucide-react.mjs";
+import { E as Loader, K as Calendar, T as Lock, j as Hash, l as Star, x as MessageSquare } from "../_libs/lucide-react.mjs";
 //#region node_modules/.nitro/vite/services/ssr/assets/admin-DweuAQbJ.js
 var import_react = /* @__PURE__ */ __toESM(require_react());
 var import_jsx_runtime = require_jsx_runtime();
