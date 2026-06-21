@@ -3,10 +3,10 @@ import { n as require_jsx_runtime, r as require_react, t as QueryClientProvider 
 import { _ as useRouter, c as HeadContent, d as Outlet, f as lazyRouteComponent, h as Link, m as createRootRouteWithContext, p as createFileRoute, s as Scripts, u as createRouter } from "../_libs/@tanstack/react-router+[...].mjs";
 import { t as QueryClient } from "../_libs/tanstack__query-core.mjs";
 import { t as Toaster } from "../_libs/sonner.mjs";
-//#region node_modules/.nitro/vite/services/ssr/assets/router-CEW9P0tn.js
+//#region node_modules/.nitro/vite/services/ssr/assets/router-BH49I9PP.js
 var import_react = /* @__PURE__ */ __toESM(require_react());
 var import_jsx_runtime = require_jsx_runtime();
-var styles_default = "/assets/styles-DJRxOMiW.css";
+var styles_default = "/assets/styles-kYeMaGmx.css";
 function reportLovableError(error, context = {}) {
 	if (typeof window === "undefined") return;
 	window.__lovableEvents?.captureException?.(error, {
@@ -99,7 +99,7 @@ function ErrorComponent({ error, reset }) {
 		})
 	});
 }
-var Route$2 = createRootRouteWithContext()({
+var Route$3 = createRootRouteWithContext()({
 	head: () => ({
 		meta: [
 			{ charSet: "utf-8" },
@@ -185,7 +185,7 @@ function RootShell({ children }) {
 	});
 }
 function RootComponent() {
-	const { queryClient } = Route$2.useRouteContext();
+	const { queryClient } = Route$3.useRouteContext();
 	return /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(QueryClientProvider, {
 		client: queryClient,
 		children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Outlet, {}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Toaster$1, {
@@ -195,9 +195,11 @@ function RootComponent() {
 		})]
 	});
 }
-var $$splitComponentImporter$1 = () => import("./admin-DFvWiwM6.mjs");
+var $$splitComponentImporter$2 = () => import("./privacy-CSGzE0jw.mjs");
+var Route$2 = createFileRoute("/privacy")({ component: lazyRouteComponent($$splitComponentImporter$2, "component") });
+var $$splitComponentImporter$1 = () => import("./admin-DweuAQbJ.mjs");
 var Route$1 = createFileRoute("/admin")({ component: lazyRouteComponent($$splitComponentImporter$1, "component") });
-var $$splitComponentImporter = () => import("./routes-CEu_HTh0.mjs");
+var $$splitComponentImporter = () => import("./routes-DXp9-3nY.mjs");
 var Route = createFileRoute("/")({
 	head: () => ({ meta: [
 		{ title: "SuiteSurvivor" },
@@ -216,20 +218,26 @@ var Route = createFileRoute("/")({
 	] }),
 	component: lazyRouteComponent($$splitComponentImporter, "component")
 });
+var PrivacyRoute = Route$2.update({
+	id: "/privacy",
+	path: "/privacy",
+	getParentRoute: () => Route$3
+});
 var AdminRoute = Route$1.update({
 	id: "/admin",
 	path: "/admin",
-	getParentRoute: () => Route$2
+	getParentRoute: () => Route$3
 });
 var rootRouteChildren = {
 	IndexRoute: Route.update({
 		id: "/",
 		path: "/",
-		getParentRoute: () => Route$2
+		getParentRoute: () => Route$3
 	}),
-	AdminRoute
+	AdminRoute,
+	PrivacyRoute
 };
-var routeTree = Route$2._addFileChildren(rootRouteChildren)._addFileTypes();
+var routeTree = Route$3._addFileChildren(rootRouteChildren)._addFileTypes();
 var getRouter = () => {
 	return createRouter({
 		routeTree,

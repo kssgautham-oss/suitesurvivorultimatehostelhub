@@ -1,8 +1,9 @@
 import { useEffect, useState } from "react";
 
-const KEY = "hostel-harmony-auth";
-const ROOM_KEY = "hostel-harmony-room";
-const ACCOUNTS_KEY = "hostel-harmony-accounts";
+const PREFIX = "ss_";
+const KEY = PREFIX + btoa("hostel-harmony-auth");
+const ROOM_KEY = PREFIX + btoa("hostel-harmony-room");
+const ACCOUNTS_KEY = PREFIX + btoa("hostel-harmony-accounts");
 
 type Account = { name: string; email: string; password: string };
 

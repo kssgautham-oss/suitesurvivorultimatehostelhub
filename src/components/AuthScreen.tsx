@@ -356,11 +356,11 @@ export default function AuthScreen() {
       <footer className="relative z-10 border-t border-white/10 py-6 px-4">
         <div className="max-w-md mx-auto flex flex-col sm:flex-row items-center justify-between gap-3 text-xs text-muted-foreground">
           <div className="flex items-center gap-4">
-            <a href="#" className="hover:text-foreground transition">
+            <a href="/privacy" className="hover:text-foreground transition">
               Privacy Policy
             </a>
             <span className="text-white/10">|</span>
-            <a href="#" className="hover:text-foreground transition">
+            <a href="/privacy" className="hover:text-foreground transition">
               Terms of Service
             </a>
           </div>

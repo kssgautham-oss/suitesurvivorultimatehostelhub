@@ -1,14 +1,27 @@
 import { r as __toESM } from "../_runtime.mjs";
 import { n as fetchAllReviews } from "./room-api-DGV2ef_4.mjs";
 import { n as require_jsx_runtime, r as require_react } from "../_libs/react+tanstack__react-query.mjs";
-import { K as Calendar, O as LoaderCircle, S as MessageSquare, j as Hash, l as Star } from "../_libs/lucide-react.mjs";
-//#region node_modules/.nitro/vite/services/ssr/assets/admin-DFvWiwM6.js
+import { D as Loader, E as Lock, K as Calendar, S as MessageSquare, j as Hash, l as Star } from "../_libs/lucide-react.mjs";
+//#region node_modules/.nitro/vite/services/ssr/assets/admin-DweuAQbJ.js
 var import_react = /* @__PURE__ */ __toESM(require_react());
 var import_jsx_runtime = require_jsx_runtime();
+var ADMIN_CODE = "ADMIN123";
 function AdminReviews() {
+	const [unlocked, setUnlocked] = (0, import_react.useState)(false);
+	const [input, setInput] = (0, import_react.useState)("");
 	const [reviews, setReviews] = (0, import_react.useState)([]);
 	const [loading, setLoading] = (0, import_react.useState)(true);
 	const [error, setError] = (0, import_react.useState)(null);
+	(0, import_react.useEffect)(() => {
+		if (!unlocked) return;
+		fetchAllReviews().then((data) => {
+			setReviews(data);
+			setLoading(false);
+		}).catch((err) => {
+			setError(err instanceof Error ? err.message : "Failed to load reviews");
+			setLoading(false);
+		});
+	}, [unlocked]);
 	(0, import_react.useEffect)(() => {
 		fetchAllReviews().then((data) => {
 			setReviews(data);
@@ -19,6 +32,44 @@ function AdminReviews() {
 		});
 	}, []);
 	const avg = reviews.length > 0 ? (reviews.reduce((s, r) => s + r.rating, 0) / reviews.length).toFixed(1) : "0.0";
+	if (!unlocked) return /* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
+		className: "relative min-h-screen flex items-center justify-center px-4",
+		children: /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+			className: "w-full max-w-sm glass-strong rounded-3xl p-6 sm:p-8 text-center space-y-4 animate-pop-in",
+			children: [
+				/* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
+					className: "mx-auto h-14 w-14 rounded-2xl gradient-brand grid place-items-center glow-purple",
+					children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Lock, { className: "h-6 w-6 text-white" })
+				}),
+				/* @__PURE__ */ (0, import_jsx_runtime.jsx)("h1", {
+					className: "text-2xl font-black text-gradient",
+					children: "Admin Access"
+				}),
+				/* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", {
+					className: "text-sm text-muted-foreground",
+					children: "Enter the admin code to view the review dashboard."
+				}),
+				/* @__PURE__ */ (0, import_jsx_runtime.jsx)("input", {
+					type: "password",
+					value: input,
+					onChange: (e) => setInput(e.target.value),
+					onKeyDown: (e) => {
+						if (e.key === "Enter" && input === ADMIN_CODE) setUnlocked(true);
+					},
+					placeholder: "Admin code",
+					className: "w-full px-4 py-3 rounded-2xl glass outline-none text-sm border border-white/10 focus:border-neon-purple/60"
+				}),
+				/* @__PURE__ */ (0, import_jsx_runtime.jsx)("button", {
+					onClick: () => {
+						if (input === ADMIN_CODE) setUnlocked(true);
+					},
+					disabled: input !== ADMIN_CODE,
+					className: "w-full py-3 rounded-2xl gradient-brand font-semibold text-white glow-purple hover:scale-[1.02] active:scale-[0.98] transition disabled:opacity-50",
+					children: "Unlock"
+				})
+			]
+		})
+	});
 	return /* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
 		className: "relative min-h-screen px-4 py-8",
 		children: /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
@@ -56,7 +107,7 @@ function AdminReviews() {
 				}),
 				loading && /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
 					className: "flex items-center justify-center py-20 gap-2 text-muted-foreground",
-					children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(LoaderCircle, { className: "h-5 w-5 animate-spin" }), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", {
+					children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Loader, { className: "h-5 w-5 animate-spin" }), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", {
 						className: "text-sm",
 						children: "Loading reviews…"
 					})]

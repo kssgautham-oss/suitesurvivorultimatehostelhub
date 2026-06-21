@@ -4,12 +4,13 @@ import { n as require_jsx_runtime, r as require_react } from "../_libs/react+tan
 import { A as KeyRound, B as Coffee, C as Mail, D as Loader, E as Lock, F as Eye, G as Check, H as CircleCheck, I as EyeOff, J as ArrowLeft, L as Egg, M as Ghost, N as Gavel, O as LoaderCircle, P as Flame, R as Copy, T as LogIn, U as CircleAlert, V as Clock, W as ChefHat, _ as RotateCw, a as Users, b as PenLine, c as Sun, d as Snowflake, f as Shuffle, g as Scale, h as ScrollText, i as Wallet, k as Link2, m as Share2, n as X, o as User, p as Shield, q as ArrowRight, r as Wand, s as Trash2, t as Zap, u as Sparkles, v as Receipt, w as LogOut, x as Moon, y as Plus, z as Cookie } from "../_libs/lucide-react.mjs";
 import { n as toast } from "../_libs/sonner.mjs";
 import { t as confetti_module_default } from "../_libs/canvas-confetti.mjs";
-//#region node_modules/.nitro/vite/services/ssr/assets/routes-CEu_HTh0.js
+//#region node_modules/.nitro/vite/services/ssr/assets/routes-DXp9-3nY.js
 var import_react = /* @__PURE__ */ __toESM(require_react());
 var import_jsx_runtime = require_jsx_runtime();
-var KEY = "hostel-harmony-auth";
-var ROOM_KEY = "hostel-harmony-room";
-var ACCOUNTS_KEY = "hostel-harmony-accounts";
+var PREFIX = "ss_";
+var KEY = PREFIX + btoa("hostel-harmony-auth");
+var ROOM_KEY = PREFIX + btoa("hostel-harmony-room");
+var ACCOUNTS_KEY = PREFIX + btoa("hostel-harmony-accounts");
 function loadAccounts() {
 	if (typeof window === "undefined") return [];
 	try {
@@ -609,7 +610,7 @@ function AuthScreen() {
 						className: "flex items-center gap-4",
 						children: [
 							/* @__PURE__ */ (0, import_jsx_runtime.jsx)("a", {
-								href: "#",
+								href: "/privacy",
 								className: "hover:text-foreground transition",
 								children: "Privacy Policy"
 							}),
@@ -618,7 +619,7 @@ function AuthScreen() {
 								children: "|"
 							}),
 							/* @__PURE__ */ (0, import_jsx_runtime.jsx)("a", {
-								href: "#",
+								href: "/privacy",
 								className: "hover:text-foreground transition",
 								children: "Terms of Service"
 							})
@@ -2911,7 +2912,7 @@ function RoomSetup() {
 									onClick: create,
 									disabled: !me.trim() || !r2.trim() || size === 3 && !r3.trim() || loading,
 									className: "w-full mt-2 py-3 rounded-2xl gradient-brand font-semibold text-white glow-purple hover:scale-[1.02] active:scale-[0.98] transition disabled:opacity-50 disabled:hover:scale-100 flex items-center justify-center gap-2",
-									children: [loading ? /* @__PURE__ */ (0, import_jsx_runtime.jsx)(LoaderCircle, { className: "h-4 w-4 animate-spin" }) : /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Sparkles, { className: "h-4 w-4" }), "Generate Room Hub"]
+									children: [loading ? /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Loader, { className: "h-4 w-4 animate-spin" }) : /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Sparkles, { className: "h-4 w-4" }), "Generate Room Hub"]
 								})
 							]
 						})
@@ -2948,7 +2949,7 @@ function RoomSetup() {
 									onClick: join,
 									disabled: code.trim().length < 3 || loading,
 									className: "w-full py-3 rounded-2xl gradient-brand font-semibold text-white glow-purple hover:scale-[1.02] active:scale-[0.98] transition disabled:opacity-50 disabled:hover:scale-100 flex items-center justify-center gap-2",
-									children: loading ? /* @__PURE__ */ (0, import_jsx_runtime.jsx)(LoaderCircle, { className: "h-4 w-4 animate-spin" }) : "Next: Quick Vibe Check"
+									children: loading ? /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Loader, { className: "h-4 w-4 animate-spin" }) : "Next: Quick Vibe Check"
 								})
 							]
 						})

@@ -1,12 +1,29 @@
 import { useEffect, useState } from "react";
-import { Star, MessageSquare, Calendar, Hash, Loader as Loader2 } from "lucide-react";
+import { Star, MessageSquare, Calendar, Hash, Loader as Loader2, Lock } from "lucide-react";
 import { fetchAllReviews } from "@/lib/room-api";
 import type { ReviewRow } from "@/lib/supabase";
 
+const ADMIN_CODE = "ADMIN123";
+
 export default function AdminReviews() {
+  const [unlocked, setUnlocked] = useState(false);
+  const [input, setInput] = useState("");
   const [reviews, setReviews] = useState<ReviewRow[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (!unlocked) return;
+    fetchAllReviews()
+      .then((data) => {
+        setReviews(data);
+        setLoading(false);
+      })
+      .catch((err) => {
+        setError(err instanceof Error ? err.message : "Failed to load reviews");
+        setLoading(false);
+      });
+  }, [unlocked]);
 
   useEffect(() => {
     fetchAllReviews()
@@ -24,6 +41,35 @@ export default function AdminReviews() {
     reviews.length > 0
       ? (reviews.reduce((s, r) => s + r.rating, 0) / reviews.length).toFixed(1)
       : "0.0";
+
+  if (!unlocked) {
+    return (
+      <div className="relative min-h-screen flex items-center justify-center px-4">
+        <div className="w-full max-w-sm glass-strong rounded-3xl p-6 sm:p-8 text-center space-y-4 animate-pop-in">
+          <div className="mx-auto h-14 w-14 rounded-2xl gradient-brand grid place-items-center glow-purple">
+            <Lock className="h-6 w-6 text-white" />
+          </div>
+          <h1 className="text-2xl font-black text-gradient">Admin Access</h1>
+          <p className="text-sm text-muted-foreground">Enter the admin code to view the review dashboard.</p>
+          <input
+            type="password"
+            value={input}
+            onChange={(e) => setInput(e.target.value)}
+            onKeyDown={(e) => { if (e.key === "Enter" && input === ADMIN_CODE) setUnlocked(true); }}
+            placeholder="Admin code"
+            className="w-full px-4 py-3 rounded-2xl glass outline-none text-sm border border-white/10 focus:border-neon-purple/60"
+          />
+          <button
+            onClick={() => { if (input === ADMIN_CODE) setUnlocked(true); }}
+            disabled={input !== ADMIN_CODE}
+            className="w-full py-3 rounded-2xl gradient-brand font-semibold text-white glow-purple hover:scale-[1.02] active:scale-[0.98] transition disabled:opacity-50"
+          >
+            Unlock
+          </button>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="relative min-h-screen px-4 py-8">
