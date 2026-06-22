@@ -1,10 +1,10 @@
 import { r as __toESM } from "../_runtime.mjs";
-import { r as findRoomByCode, t as createRoom } from "./room-api-DGV2ef_4.mjs";
+import { i as submitReview, r as findRoomByCode, t as createRoom } from "./room-api-9XS3Sp0n.mjs";
 import { n as require_jsx_runtime, r as require_react } from "../_libs/react+tanstack__react-query.mjs";
-import { A as Hop, B as Coffee, C as LogOut, D as LoaderCircle, E as Loader, F as Eye, G as Check, H as CircleCheck, I as EyeOff, J as ArrowLeft, L as Egg, M as Ghost, N as Gavel, O as Link2, P as Flame, R as Copy, S as Mail, T as Lock, U as CircleAlert, V as Clock, W as ChefHat, _ as Receipt, a as Users, b as Moon, c as Sun, d as Snowflake, f as Shuffle, g as RotateCw, h as Scale, i as Wallet, k as KeyRound, m as ScrollText, n as X, o as User, p as Share2, q as ArrowRight, r as Wand, s as Trash2, t as Zap, u as Sparkles, v as Plus, w as LogIn, x as MessageSquare, y as PenLine, z as Cookie } from "../_libs/lucide-react.mjs";
+import { A as Link2, B as Egg, C as MessageSquare, D as Lock, E as LogIn, F as Gavel, G as CircleCheck, H as Cookie, J as Check, K as CircleAlert, L as Flame, M as House, N as Hash, O as Loader, P as Ghost, R as Eye, S as Moon, T as LogOut, U as Coffee, V as Copy, W as Clock, X as ArrowRight, Z as ArrowLeft, _ as Scale, a as Users, b as Plus, c as Sun, d as Snowflake, f as Shuffle, g as ScrollText, i as Wallet, j as KeyRound, k as LoaderCircle, l as Star, m as Send, n as X, o as User, p as Share2, q as ChefHat, r as Wand, s as Trash2, t as Zap, u as Sparkles, v as RotateCw, w as Mail, x as PenLine, y as Receipt, z as EyeOff } from "../_libs/lucide-react.mjs";
 import { n as toast } from "../_libs/sonner.mjs";
 import { t as confetti_module_default } from "../_libs/canvas-confetti.mjs";
-//#region node_modules/.nitro/vite/services/ssr/assets/routes-BTVvDTC5.js
+//#region node_modules/.nitro/vite/services/ssr/assets/routes-D6C9-N0A.js
 var import_react = /* @__PURE__ */ __toESM(require_react());
 var import_jsx_runtime = require_jsx_runtime();
 var PREFIX = "ss_";
@@ -309,7 +309,7 @@ var AppleIcon = () => /* @__PURE__ */ (0, import_jsx_runtime.jsx)("svg", {
 });
 var FEATURES = [
 	{
-		icon: Hop,
+		icon: House,
 		title: "Room Management",
 		body: "Create or join rooms with unique codes. Track roommates, manage shared spaces, and keep everyone in sync.",
 		accent: "bg-neon-purple/15 text-neon-purple border-neon-purple/30"
@@ -496,6 +496,23 @@ function AuthScreen() {
 				})
 			}),
 			/* @__PURE__ */ (0, import_jsx_runtime.jsx)("section", {
+				className: "relative z-10 px-4 pb-10",
+				children: /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+					className: "max-w-md mx-auto",
+					children: [/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+						className: "flex items-center gap-3 mb-6",
+						children: [
+							/* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", { className: "h-px flex-1 bg-border" }),
+							/* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", {
+								className: "text-xs text-muted-foreground font-medium",
+								children: "share your room experience"
+							}),
+							/* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", { className: "h-px flex-1 bg-border" })
+						]
+					}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)(InlineReviewForm, {})]
+				})
+			}),
+			/* @__PURE__ */ (0, import_jsx_runtime.jsx)("section", {
 				className: "relative z-10 px-4 pb-12",
 				children: /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
 					className: "max-w-md mx-auto",
@@ -638,6 +655,15 @@ function AuthScreen() {
 								href: "/privacy",
 								className: "hover:text-foreground transition",
 								children: "Terms of Service"
+							}),
+							/* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", {
+								className: "text-white/10",
+								children: "|"
+							}),
+							/* @__PURE__ */ (0, import_jsx_runtime.jsx)("a", {
+								href: "/admin",
+								className: "hover:text-foreground transition",
+								children: "Admin"
 							})
 						]
 					}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", {
@@ -666,6 +692,140 @@ function Field$1({ icon, placeholder, value, onChange, type = "text", right, val
 			}),
 			right
 		]
+	});
+}
+function InlineReviewForm() {
+	const [name, setName] = (0, import_react.useState)("");
+	const [roomCode, setRoomCode] = (0, import_react.useState)("");
+	const [rating, setRating] = (0, import_react.useState)(0);
+	const [hoverRating, setHoverRating] = (0, import_react.useState)(0);
+	const [feedback, setFeedback] = (0, import_react.useState)("");
+	const [loading, setLoading] = (0, import_react.useState)(false);
+	const [submitted, setSubmitted] = (0, import_react.useState)(false);
+	const canSubmit = name.trim().length > 0 && roomCode.trim().length >= 3 && rating > 0 && feedback.trim().length > 0;
+	const handleSubmit = async () => {
+		if (!canSubmit) return;
+		setLoading(true);
+		try {
+			await submitReview(roomCode.trim(), name.trim(), rating, feedback.trim());
+			toast.success("Review submitted successfully!");
+			setSubmitted(true);
+		} catch (err) {
+			toast.error(err instanceof Error ? err.message : "Failed to submit review");
+		} finally {
+			setLoading(false);
+		}
+	};
+	const reset = () => {
+		setName("");
+		setRoomCode("");
+		setRating(0);
+		setHoverRating(0);
+		setFeedback("");
+		setSubmitted(false);
+	};
+	if (submitted) return /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+		className: "glass-strong rounded-3xl p-8 text-center space-y-4 animate-pop-in",
+		children: [
+			/* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
+				className: "mx-auto h-14 w-14 rounded-2xl gradient-brand grid place-items-center glow-purple",
+				children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(CircleCheck, {
+					className: "h-7 w-7 text-white",
+					strokeWidth: 3
+				})
+			}),
+			/* @__PURE__ */ (0, import_jsx_runtime.jsx)("h3", {
+				className: "text-2xl font-black text-gradient",
+				children: "Thanks for your review!"
+			}),
+			/* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", {
+				className: "text-sm text-muted-foreground",
+				children: "Your feedback helps future roommates find the right vibe."
+			}),
+			/* @__PURE__ */ (0, import_jsx_runtime.jsx)("button", {
+				onClick: reset,
+				className: "px-6 py-3 rounded-2xl gradient-brand text-white font-semibold glow-purple hover:scale-[1.02] active:scale-[0.98] transition",
+				children: "Submit Another Review"
+			})
+		]
+	});
+	return /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+		className: "glass-strong rounded-3xl p-6 sm:p-8 space-y-5 animate-pop-in",
+		children: [/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+			className: "text-center",
+			children: [
+				/* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
+					className: "mx-auto h-12 w-12 rounded-2xl gradient-brand grid place-items-center glow-purple mb-3",
+					children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(MessageSquare, { className: "h-6 w-6 text-white" })
+				}),
+				/* @__PURE__ */ (0, import_jsx_runtime.jsx)("h3", {
+					className: "text-xl font-black text-gradient",
+					children: "Leave a Review"
+				}),
+				/* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", {
+					className: "text-sm text-muted-foreground mt-1",
+					children: "Rate your room experience and share honest feedback."
+				})
+			]
+		}), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+			className: "space-y-4",
+			children: [
+				/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+					className: "flex items-center gap-2 px-4 py-3 rounded-2xl glass border border-white/10 focus-within:border-neon-purple/60 transition",
+					children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(User, { className: "h-4 w-4 text-muted-foreground" }), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("input", {
+						value: name,
+						onChange: (e) => setName(e.target.value),
+						placeholder: "Your name",
+						className: "flex-1 bg-transparent outline-none text-sm placeholder:text-muted-foreground"
+					})]
+				}),
+				/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+					className: "flex items-center gap-2 px-4 py-3 rounded-2xl glass border border-white/10 focus-within:border-neon-purple/60 transition",
+					children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Hash, { className: "h-4 w-4 text-muted-foreground" }), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("input", {
+						value: roomCode,
+						onChange: (e) => setRoomCode(e.target.value),
+						placeholder: "Room code (e.g. SUITE-123)",
+						className: "flex-1 bg-transparent outline-none text-sm placeholder:text-muted-foreground"
+					})]
+				}),
+				/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", { children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", {
+					className: "text-xs font-semibold mb-2 text-muted-foreground",
+					children: "Rating"
+				}), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+					className: "flex items-center gap-1",
+					children: [Array.from({ length: 5 }).map((_, i) => {
+						const value = i + 1;
+						return /* @__PURE__ */ (0, import_jsx_runtime.jsx)("button", {
+							type: "button",
+							onMouseEnter: () => setHoverRating(value),
+							onMouseLeave: () => setHoverRating(0),
+							onClick: () => setRating(value),
+							className: "p-1 transition hover:scale-110",
+							children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Star, { className: `h-7 w-7 transition ${value <= (hoverRating || rating) ? "text-electric-orange fill-electric-orange" : "text-muted-foreground/30"}` })
+						}, value);
+					}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", {
+						className: "ml-2 text-sm font-bold text-electric-orange",
+						children: rating > 0 ? `${rating}/5` : "Select a rating"
+					})]
+				})] }),
+				/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", { children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", {
+					className: "text-xs font-semibold mb-2 text-muted-foreground",
+					children: "Feedback"
+				}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("textarea", {
+					value: feedback,
+					onChange: (e) => setFeedback(e.target.value),
+					placeholder: "How was your room experience? What would you change?",
+					rows: 4,
+					className: "w-full px-4 py-3 rounded-2xl glass outline-none text-sm border border-white/10 focus:border-neon-purple/60 resize-none placeholder:text-muted-foreground"
+				})] }),
+				/* @__PURE__ */ (0, import_jsx_runtime.jsx)("button", {
+					onClick: handleSubmit,
+					disabled: !canSubmit || loading,
+					className: "w-full py-3 rounded-2xl gradient-brand font-semibold text-white glow-purple hover:scale-[1.02] active:scale-[0.98] transition disabled:opacity-50 disabled:hover:scale-100 flex items-center justify-center gap-2",
+					children: loading ? /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Loader, { className: "h-5 w-5 animate-spin" }) : /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(import_jsx_runtime.Fragment, { children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Send, { className: "h-4 w-4" }), " Submit Review"] })
+				})
+			]
+		})]
 	});
 }
 function AliasOnboarding() {

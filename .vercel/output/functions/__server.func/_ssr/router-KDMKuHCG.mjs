@@ -1,12 +1,12 @@
 import { r as __toESM } from "../_runtime.mjs";
 import { n as require_jsx_runtime, r as require_react, t as QueryClientProvider } from "../_libs/react+tanstack__react-query.mjs";
-import { _ as useRouter, c as HeadContent, d as Outlet, f as lazyRouteComponent, h as Link, m as createRootRouteWithContext, p as createFileRoute, s as Scripts, u as createRouter } from "../_libs/@tanstack/react-router+[...].mjs";
-import { t as QueryClient } from "../_libs/tanstack__query-core.mjs";
+import { c as HeadContent, d as Outlet, f as lazyRouteComponent, g as useRouter, h as Link, m as createRootRouteWithContext, p as createFileRoute, s as Scripts, u as createRouter } from "../_libs/@tanstack/react-router+[...].mjs";
 import { t as Toaster } from "../_libs/sonner.mjs";
-//#region node_modules/.nitro/vite/services/ssr/assets/router-w7DTIAHp.js
+import { t as QueryClient } from "../_libs/tanstack__query-core.mjs";
+//#region node_modules/.nitro/vite/services/ssr/assets/router-KDMKuHCG.js
 var import_react = /* @__PURE__ */ __toESM(require_react());
 var import_jsx_runtime = require_jsx_runtime();
-var styles_default = "/assets/styles-ao805cmY.css";
+var styles_default = "/assets/styles-al41XamQ.css";
 function reportLovableError(error, context = {}) {
 	if (typeof window === "undefined") return;
 	window.__lovableEvents?.captureException?.(error, {
@@ -99,7 +99,7 @@ function ErrorComponent({ error, reset }) {
 		})
 	});
 }
-var Route$3 = createRootRouteWithContext()({
+var Route$4 = createRootRouteWithContext()({
 	head: () => ({
 		meta: [
 			{ charSet: "utf-8" },
@@ -185,7 +185,7 @@ function RootShell({ children }) {
 	});
 }
 function RootComponent() {
-	const { queryClient } = Route$3.useRouteContext();
+	const { queryClient } = Route$4.useRouteContext();
 	return /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(QueryClientProvider, {
 		client: queryClient,
 		children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Outlet, {}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Toaster$1, {
@@ -195,11 +195,13 @@ function RootComponent() {
 		})]
 	});
 }
+var $$splitComponentImporter$3 = () => import("./reviews-B1QzVtWG.mjs");
+var Route$3 = createFileRoute("/reviews")({ component: lazyRouteComponent($$splitComponentImporter$3, "component") });
 var $$splitComponentImporter$2 = () => import("./privacy-CSGzE0jw.mjs");
 var Route$2 = createFileRoute("/privacy")({ component: lazyRouteComponent($$splitComponentImporter$2, "component") });
-var $$splitComponentImporter$1 = () => import("./admin-DweuAQbJ.mjs");
+var $$splitComponentImporter$1 = () => import("./admin-Cs_zwT_F.mjs");
 var Route$1 = createFileRoute("/admin")({ component: lazyRouteComponent($$splitComponentImporter$1, "component") });
-var $$splitComponentImporter = () => import("./routes-BTVvDTC5.mjs");
+var $$splitComponentImporter = () => import("./routes-D6C9-N0A.mjs");
 var Route = createFileRoute("/")({
 	head: () => ({ meta: [
 		{ title: "SuiteSurvivor" },
@@ -218,26 +220,32 @@ var Route = createFileRoute("/")({
 	] }),
 	component: lazyRouteComponent($$splitComponentImporter, "component")
 });
+var ReviewsRoute = Route$3.update({
+	id: "/reviews",
+	path: "/reviews",
+	getParentRoute: () => Route$4
+});
 var PrivacyRoute = Route$2.update({
 	id: "/privacy",
 	path: "/privacy",
-	getParentRoute: () => Route$3
+	getParentRoute: () => Route$4
 });
 var AdminRoute = Route$1.update({
 	id: "/admin",
 	path: "/admin",
-	getParentRoute: () => Route$3
+	getParentRoute: () => Route$4
 });
 var rootRouteChildren = {
 	IndexRoute: Route.update({
 		id: "/",
 		path: "/",
-		getParentRoute: () => Route$3
+		getParentRoute: () => Route$4
 	}),
 	AdminRoute,
-	PrivacyRoute
+	PrivacyRoute,
+	ReviewsRoute
 };
-var routeTree = Route$3._addFileChildren(rootRouteChildren)._addFileTypes();
+var routeTree = Route$4._addFileChildren(rootRouteChildren)._addFileTypes();
 var getRouter = () => {
 	return createRouter({
 		routeTree,

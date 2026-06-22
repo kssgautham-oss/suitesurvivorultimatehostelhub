@@ -383,6 +383,16 @@ var Flame = createLucideIcon("flame", [["path", {
 * This source code is licensed under the ISC license.
 * See the LICENSE file in the root directory of this source tree.
 */
+var Funnel = createLucideIcon("funnel", [["path", {
+	d: "M10 20a1 1 0 0 0 .553.895l2 1A1 1 0 0 0 14 21v-7a2 2 0 0 1 .517-1.341L21.74 4.67A1 1 0 0 0 21 3H3a1 1 0 0 0-.742 1.67l7.225 7.989A2 2 0 0 1 10 14z",
+	key: "sc7q7i"
+}]]);
+/**
+* @license lucide-react v0.575.0 - ISC
+*
+* This source code is licensed under the ISC license.
+* See the LICENSE file in the root directory of this source tree.
+*/
 var Gavel = createLucideIcon("gavel", [
 	["path", {
 		d: "m14 13-8.381 8.38a1 1 0 0 1-3.001-3l8.384-8.381",
@@ -467,40 +477,13 @@ var Hash = createLucideIcon("hash", [
 * This source code is licensed under the ISC license.
 * See the LICENSE file in the root directory of this source tree.
 */
-var Hop = createLucideIcon("hop", [
-	["path", {
-		d: "M10.82 16.12c1.69.6 3.91.79 5.18.85.55.03 1-.42.97-.97-.06-1.27-.26-3.5-.85-5.18",
-		key: "18lxf1"
-	}],
-	["path", {
-		d: "M11.5 6.5c1.64 0 5-.38 6.71-1.07.52-.2.55-.82.12-1.17A10 10 0 0 0 4.26 18.33c.35.43.96.4 1.17-.12.69-1.71 1.07-5.07 1.07-6.71 1.34.45 3.1.9 4.88.62a.88.88 0 0 0 .73-.74c.3-2.14-.15-3.5-.61-4.88",
-		key: "vtfxrw"
-	}],
-	["path", {
-		d: "M15.62 16.95c.2.85.62 2.76.5 4.28a.77.77 0 0 1-.9.7 16.64 16.64 0 0 1-4.08-1.36",
-		key: "13hl71"
-	}],
-	["path", {
-		d: "M16.13 21.05c1.65.63 3.68.84 4.87.91a.9.9 0 0 0 .96-.96 17.68 17.68 0 0 0-.9-4.87",
-		key: "1sl8oj"
-	}],
-	["path", {
-		d: "M16.94 15.62c.86.2 2.77.62 4.29.5a.77.77 0 0 0 .7-.9 16.64 16.64 0 0 0-1.36-4.08",
-		key: "19c6kt"
-	}],
-	["path", {
-		d: "M17.99 5.52a20.82 20.82 0 0 1 3.15 4.5.8.8 0 0 1-.68 1.13c-2.33.2-5.3-.32-8.27-1.57",
-		key: "85ghs3"
-	}],
-	["path", {
-		d: "M4.93 4.93 3 3a.7.7 0 0 1 0-1",
-		key: "x087yj"
-	}],
-	["path", {
-		d: "M9.58 12.18c1.24 2.98 1.77 5.95 1.57 8.28a.8.8 0 0 1-1.13.68 20.82 20.82 0 0 1-4.5-3.15",
-		key: "11xdqo"
-	}]
-]);
+var House = createLucideIcon("house", [["path", {
+	d: "M15 21v-8a1 1 0 0 0-1-1h-4a1 1 0 0 0-1 1v8",
+	key: "5wwlr5"
+}], ["path", {
+	d: "M3 10a2 2 0 0 1 .709-1.528l7-6a2 2 0 0 1 2.582 0l7 6A2 2 0 0 1 21 10v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z",
+	key: "r6nss1"
+}]]);
 /**
 * @license lucide-react v0.575.0 - ISC
 *
@@ -796,6 +779,34 @@ var ScrollText = createLucideIcon("scroll-text", [
 		key: "1ph1d7"
 	}]
 ]);
+/**
+* @license lucide-react v0.575.0 - ISC
+*
+* This source code is licensed under the ISC license.
+* See the LICENSE file in the root directory of this source tree.
+*/
+var Search = createLucideIcon("search", [["path", {
+	d: "m21 21-4.34-4.34",
+	key: "14j7rj"
+}], ["circle", {
+	cx: "11",
+	cy: "11",
+	r: "8",
+	key: "4ej97u"
+}]]);
+/**
+* @license lucide-react v0.575.0 - ISC
+*
+* This source code is licensed under the ISC license.
+* See the LICENSE file in the root directory of this source tree.
+*/
+var Send = createLucideIcon("send", [["path", {
+	d: "M14.536 21.686a.5.5 0 0 0 .937-.024l6.5-19a.496.496 0 0 0-.635-.635l-19 6.5a.5.5 0 0 0-.024.937l7.93 3.18a2 2 0 0 1 1.112 1.11z",
+	key: "1ffxy3"
+}], ["path", {
+	d: "m21.854 2.147-10.94 10.939",
+	key: "12cjpa"
+}]]);
 /**
 * @license lucide-react v0.575.0 - ISC
 *
@@ -1152,4 +1163,4 @@ var Zap = createLucideIcon("zap", [["path", {
 	key: "1xq2db"
 }]]);
 //#endregion
-export { Hop as A, Coffee as B, LogOut as C, LoaderCircle as D, Loader as E, Eye as F, Check as G, CircleCheck as H, EyeOff as I, ArrowLeft as J, Calendar as K, Egg as L, Ghost as M, Gavel as N, Link2 as O, Flame as P, Copy as R, Mail as S, Lock as T, CircleAlert as U, Clock as V, ChefHat as W, Receipt as _, Users as a, Moon as b, Sun as c, Snowflake as d, Shuffle as f, RotateCw as g, Scale as h, Wallet as i, Hash as j, KeyRound as k, Star as l, ScrollText as m, X as n, User as o, Share2 as p, ArrowRight as q, Wand as r, Trash2 as s, Zap as t, Sparkles as u, Plus as v, LogIn as w, MessageSquare as x, PenLine as y, Cookie as z };
+export { Link2 as A, Egg as B, MessageSquare as C, Lock as D, LogIn as E, Gavel as F, CircleCheck as G, Cookie as H, Funnel as I, Check as J, CircleAlert as K, Flame as L, House as M, Hash as N, Loader as O, Ghost as P, Eye as R, Moon as S, LogOut as T, Coffee as U, Copy as V, Clock as W, ArrowRight as X, Calendar as Y, ArrowLeft as Z, Scale as _, Users as a, Plus as b, Sun as c, Snowflake as d, Shuffle as f, ScrollText as g, Search as h, Wallet as i, KeyRound as j, LoaderCircle as k, Star as l, Send as m, X as n, User as o, Share2 as p, ChefHat as q, Wand as r, Trash2 as s, Zap as t, Sparkles as u, RotateCw as v, Mail as w, PenLine as x, Receipt as y, EyeOff as z };
